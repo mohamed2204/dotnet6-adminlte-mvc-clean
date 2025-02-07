@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AdminLTE.MVC.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,11 +19,11 @@ namespace AdminLTE.MVC.Controllers
         {
             _logger = logger;
         }
-[AllowAnonymous]
-    public IActionResult Index()
-{
-    return View();
-}
+        //[AllowAnonymous]
+        public IActionResult Index()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {
