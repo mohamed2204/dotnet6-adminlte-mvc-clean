@@ -1,9 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-    Layout = "~/Views/Shared/AdminLTE/_Layout.cshtml";
+﻿@using AdminLTE.MVC.Controllers
+@model ApplicationControllersViewModel
+@{
+	ViewData["Title"] = "Home Page";
+	Layout = "~/Views/Shared/AdminLTE/_Layout.cshtml";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+	<h1 class="display-4">Welcome</h1>
+	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+	@*  @ControllerActionViewModel.ControllerName; *@
+
+
+	@foreach (var c in Model.Controllers)
+	{
+		<ul class="list-group">
+			@c.ControllerName
+			@foreach (var a in c.ActionsNames)
+			{
+				<li class="list-group-item">@a</li>
+
+			}
+		</ul>
+	};
+
+
 </div>

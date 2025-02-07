@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AdminLTE.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
 
 namespace AdminLTE.MVC.Controllers
 {
@@ -22,12 +23,56 @@ namespace AdminLTE.MVC.Controllers
         //[AllowAnonymous]
         public IActionResult Index()
         {
-            return View();
+
+            var model = new ApplicationControllersViewModel
+            {
+                Controllers = GetControllersAndActions()
+            };
+
+            return View(model);
         }
 
         public IActionResult Privacy()
         {
             return View();
+        }
+
+
+        public List<ControllerActionViewModel> GetControllersAndActions()
+        {
+            var controllersActionList = new List<ControllerActionViewModel>();
+            var controllers = Assembly.GetExecutingAssembly().GetTypes()
+              .Where(type => typeof(Controller).IsAssignableFrom(type) && !type.IsAbstract);
+
+
+            foreach (var controller in controllers)
+            {
+                var actions = controller.GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public)
+                    .Where(m => IsActionMethod(m))
+                    .Select(x => x.Name)
+                    .Distinct()
+                    .ToList();
+
+                controllersActionList.Add(new ControllerActionViewModel
+                {
+                    ControllerName = controller.Name.Replace("Controller", ""),
+                    ActionsNames = actions
+                });
+                //Debug.Write(actions);
+            }
+
+            return controllersActionList;
+        }
+
+        private bool IsActionMethod(MethodInfo methodInfo)
+        {
+            bool IsActionResult = typeof(IActionResult).IsAssignableFrom(methodInfo.ReturnType);
+            bool IsTaskIActionResult = methodInfo.ReturnType.IsGenericType &&
+                                        methodInfo.ReturnType.GetGenericTypeDefinition() == typeof(Task<>) &&
+                                        typeof(IActionResult).IsAssignableFrom(methodInfo.ReturnType.GetGenericArguments()[0]);
+
+
+            return IsActionResult || IsTaskIActionResult;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
