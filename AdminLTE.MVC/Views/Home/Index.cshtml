@@ -1,4 +1,4 @@
-﻿@using AdminLTE.MVC.Controllers
+﻿@using AdminLTE.MVC.ViewModel
 @model ApplicationControllersViewModel
 @{
 	ViewData["Title"] = "Home Page";
@@ -9,20 +9,23 @@
 	<h1 class="display-4">Welcome</h1>
 	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 
-	@*  @ControllerActionViewModel.ControllerName; *@
 
-
-	@foreach (var c in Model.Controllers)
-	{
-		<ul class="list-group">
-			@c.ControllerName
-			@foreach (var a in c.ActionsNames)
+	<div class="row">
+		<div class="col">
+			@foreach (var c in Model.Controllers)
 			{
-				<li class="list-group-item">@a</li>
+				<ul class="list-group">
+					@c.ControllerName
+					@foreach (var a in c.ActionsNames)
+					{
+						<li class="list-group-item">@a</li>
 
+					}
+				</ul>
 			}
-		</ul>
-	};
-
+		</div>
+		<div class="col">col</div>
+		<div class="col">col</div>
+	</div>
 
 </div>

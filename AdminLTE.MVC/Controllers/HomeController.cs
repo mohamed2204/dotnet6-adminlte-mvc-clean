@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using AdminLTE.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
+using AdminLTE.MVC.ViewModel;
 
 namespace AdminLTE.MVC.Controllers
 {
