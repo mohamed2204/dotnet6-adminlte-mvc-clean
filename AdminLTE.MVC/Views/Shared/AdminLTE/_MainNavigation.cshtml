@@ -46,16 +46,29 @@ else
                             </p>
                         </a>
                     </li>
+                    @if (User.IsInRole(Roles.SuperAdmin.ToString()))
+                    {
+                        <li class="nav-item ">
+                            <a asp-controller="Users" asp-action="Index" class="nav-link @Url.MakeActiveClass("users","index")">
+                                <i class="nav-icon fas fa-lock"></i>
+                                <p>
+                                    Manage Users
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a asp-controller="Roles" asp-action="Index" class="nav-link @Url.MakeActiveClass("roles","index")">
+                                <i class="nav-icon fas fa-lock"></i>
+                                <p>
+                                    Manage Roles
+                                </p>
+                            </a>
+                        </li>
+                  
+
+                    }
                 }
-                @if (User.IsInRole(Roles.SuperAdmin.ToString()))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Manage Users</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Roles" asp-action="Index">Manage Roles</a>
-                    </li>
-                }
+               
             </ul>
         </nav>
     </div>
