@@ -29,7 +29,7 @@ else
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item ">
-                    <a asp-controller="Home" asp-action="Index" class="nav-link @Url.MakeActiveClass("home","index")">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link @Url.MakeActiveClass("Home","index")">
                         <i class="nav-icon fas fa-home"></i>
                         <p>
                             Home
@@ -39,10 +39,18 @@ else
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item ">
-                        <a asp-controller="Home" asp-action="Privacy" class="nav-link @Url.MakeActiveClass("home","privacy")">
+                        <a asp-controller="Home" asp-action="Privacy" class="nav-link @Url.MakeActiveClass("Home","privacy")">
                             <i class="nav-icon fas fa-lock"></i>
                             <p>
                                 Privacy
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a asp-controller="Stagiaires" asp-action="Index" class="nav-link @Url.MakeActiveClass("stagiaires","index")">
+                            <i class="nav-icon fas fa-lock"></i>
+                            <p>
+                                Stagiaires
                             </p>
                         </a>
                     </li>

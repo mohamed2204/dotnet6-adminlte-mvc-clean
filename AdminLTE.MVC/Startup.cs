@@ -16,6 +16,7 @@ using System.Diagnostics;
 using AdminLTE.MVC.Filters;
 using AdminLTE.MVC.Models;
 using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AdminLTE.MVC
 {
@@ -34,9 +35,15 @@ namespace AdminLTE.MVC
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
+                    options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
+
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -95,7 +102,7 @@ namespace AdminLTE.MVC
                 endpoints.MapRazorPages();
             });
 
-          
+
             //Assembly asm = Assembly.GetAssembly(typeof(MyWebDll.MvcApplication));
 
             //var controlleractionlist = asm.GetTypes()
