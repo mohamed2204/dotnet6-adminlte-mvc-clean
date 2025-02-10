@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using AdminLTE.MVC.Models;
+﻿using AdminLTE.MVC.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +10,13 @@ namespace AdminLTE.MVC.Data
 
         //entities
         public DbSet<Stagiaire> Students { get; set; }
-      
+        public DbSet<Matiere> Matieres { get; set; }
+
+        public DbSet<Stage> Stages { get; set; }
+        public DbSet<Phase> Phases { get; set; }
+        //public DbSet<Stagiaire> Students { get; set; }
+        //public DbSet<Matiere> Matieres { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -24,6 +26,7 @@ namespace AdminLTE.MVC.Data
         {
             base.OnModelCreating(builder);
 
+            #region sqlserver
             //builder.Entity<ApplicationUser>().ToTable("Users", "security");
             //builder.Entity<IdentityRole>().ToTable("Roles", "security");
             //builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles", "security");
@@ -31,7 +34,7 @@ namespace AdminLTE.MVC.Data
             //builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", "security");
             //builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", "security");
             //builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", "security");
-
+            #endregion
 
             builder.Entity<ApplicationUser>().ToTable("Users");
             builder.Entity<IdentityRole>().ToTable("Roles");
