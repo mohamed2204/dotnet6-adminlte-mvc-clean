@@ -115,6 +115,7 @@ namespace AdminLTE.MVC.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -129,14 +130,34 @@ namespace AdminLTE.MVC.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Promotion")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Stages");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.StagePhase", b =>
+                {
+                    b.Property<int>("StageId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PhaseId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("StageId", "PhaseId");
+
+                    b.HasIndex("PhaseId");
+
+                    b.ToTable("StagePhases", (string)null);
                 });
 
             modelBuilder.Entity("AdminLTE.MVC.Models.Stagiaire", b =>
@@ -305,6 +326,25 @@ namespace AdminLTE.MVC.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AdminLTE.MVC.Models.StagePhase", b =>
+                {
+                    b.HasOne("AdminLTE.MVC.Models.Phase", "Phase")
+                        .WithMany("StagePhases")
+                        .HasForeignKey("PhaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AdminLTE.MVC.Models.Stage", "Stage")
+                        .WithMany("StagePhases")
+                        .HasForeignKey("StageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Phase");
+
+                    b.Navigation("Stage");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -354,6 +394,16 @@ namespace AdminLTE.MVC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.Phase", b =>
+                {
+                    b.Navigation("StagePhases");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.Stage", b =>
+                {
+                    b.Navigation("StagePhases");
                 });
 #pragma warning restore 612, 618
         }

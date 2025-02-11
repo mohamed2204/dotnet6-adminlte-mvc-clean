@@ -1,4 +1,5 @@
-﻿using AdminLTE.MVC.Models;
+﻿using System.Reflection.Emit;
+using AdminLTE.MVC.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,9 @@ namespace AdminLTE.MVC.Data
 
         public DbSet<Stage> Stages { get; set; }
         public DbSet<Phase> Phases { get; set; }
-        //public DbSet<Stagiaire> Students { get; set; }
-        //public DbSet<Matiere> Matieres { get; set; }
+
+        public DbSet<StagePhase> StagePhases { get; set; }
+      
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -25,6 +27,20 @@ namespace AdminLTE.MVC.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
+            builder.Entity<StagePhase>()
+               .HasKey(sc => new { sc.StageId, sc.PhaseId }); // Composite Key for Join Table
+            builder.Entity<StagePhase>()
+                .HasOne(sc => sc.Stage)
+                .WithMany(s => s.StagePhases) // Navigation Property in Student
+                .HasForeignKey(sc => sc.StageId); //Foreign Key
+            builder.Entity<StagePhase>()
+                .HasOne(sc => sc.Phase)
+                .WithMany(c => c.StagePhases) // Navigation Property in Course
+                .HasForeignKey(sc => sc.PhaseId); //Foreign Key
+            // Explicitly configure the join table name
+            builder.Entity<StagePhase>().ToTable("StagePhases");
 
             #region sqlserver
             //builder.Entity<ApplicationUser>().ToTable("Users", "security");
