@@ -30,19 +30,6 @@ namespace AdminLTE.MVC.Data
             base.OnModelCreating(builder);
 
 
-            //builder.Entity<StagePhase>()
-            //   .HasKey(sc => new { sc.StageId, sc.PhaseId }); // Composite Key for Join Table
-            //builder.Entity<StagePhase>()
-            //    .HasOne(sc => sc.Stage)
-            //    .WithMany(s => s.StagePhases) // Navigation Property in Student
-            //    .HasForeignKey(sc => sc.StageId); //Foreign Key
-            //builder.Entity<StagePhase>()
-            //    .HasOne(sc => sc.Phase)
-            //    .WithMany(c => c.StagePhases) // Navigation Property in Course
-            //    .HasForeignKey(sc => sc.PhaseId); //Foreign Key
-            //// Explicitly configure the join table name
-            //builder.Entity<StagePhase>().ToTable("StagePhases");
-
             #region sqlserver
             //builder.Entity<ApplicationUser>().ToTable("Users", "security");
             //builder.Entity<IdentityRole>().ToTable("Roles", "security");
@@ -130,7 +117,22 @@ namespace AdminLTE.MVC.Data
             });
 
             //OnModelCreatingPartial(builder);
-           
+
+            #region template
+
+            //builder.Entity<StagePhase>()
+            //   .HasKey(sc => new { sc.StageId, sc.PhaseId }); // Composite Key for Join Table
+            //builder.Entity<StagePhase>()
+            //    .HasOne(sc => sc.Stage)
+            //    .WithMany(s => s.StagePhases) // Navigation Property in Student
+            //    .HasForeignKey(sc => sc.StageId); //Foreign Key
+            //builder.Entity<StagePhase>()
+            //    .HasOne(sc => sc.Phase)
+            //    .WithMany(c => c.StagePhases) // Navigation Property in Course
+            //    .HasForeignKey(sc => sc.PhaseId); //Foreign Key
+            //// Explicitly configure the join table name
+            //builder.Entity<StagePhase>().ToTable("StagePhases");
+            #endregion
         }
 
         //partial void OnModelCreatingPartial(ModelBuilder builder);

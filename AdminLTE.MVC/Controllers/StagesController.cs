@@ -8,87 +8,87 @@ using Microsoft.EntityFrameworkCore;
 using AdminLTE.MVC.Data;
 using AdminLTE.MVC.Models;
 
-namespace AdminLTE.MVC
+namespace AdminLTE.MVC.Controllers
 {
-    public class PhasesController : Controller
+    public class StagesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public PhasesController(ApplicationDbContext context)
+        public StagesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Phases
+        // GET: Stages
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Phases.ToListAsync());
+            return View(await _context.Stages.ToListAsync());
         }
 
-        // GET: Phases/Details/5
+        // GET: Stages/Details/5
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null || _context.Phases == null)
+            if (id == null || _context.Stages == null)
             {
                 return NotFound();
             }
 
-            var phase = await _context.Phases
+            var stage = await _context.Stages
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (phase == null)
+            if (stage == null)
             {
                 return NotFound();
             }
 
-            return View(phase);
+            return View(stage);
         }
 
-        // GET: Phases/Create
+        // GET: Stages/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Phases/Create
+        // POST: Stages/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Phase phase)
+        public async Task<IActionResult> Create([Bind("Id,Name,Promotion")] Stage stage)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(phase);
+                _context.Add(stage);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(phase);
+            return View(stage);
         }
 
-        // GET: Phases/Edit/5
+        // GET: Stages/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null || _context.Phases == null)
+            if (id == null || _context.Stages == null)
             {
                 return NotFound();
             }
 
-            var phase = await _context.Phases.FindAsync(id);
-            if (phase == null)
+            var stage = await _context.Stages.FindAsync(id);
+            if (stage == null)
             {
                 return NotFound();
             }
-            return View(phase);
+            return View(stage);
         }
 
-        // POST: Phases/Edit/5
+        // POST: Stages/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name")] Phase phase)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Promotion")] Stage stage)
         {
-            if (id != phase.Id)
+            if (id != stage.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace AdminLTE.MVC
             {
                 try
                 {
-                    _context.Update(phase);
+                    _context.Update(stage);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PhaseExists(phase.Id))
+                    if (!StageExists(stage.Id))
                     {
                         return NotFound();
                     }
@@ -113,49 +113,49 @@ namespace AdminLTE.MVC
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(phase);
+            return View(stage);
         }
 
-        // GET: Phases/Delete/5
+        // GET: Stages/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null || _context.Phases == null)
+            if (id == null || _context.Stages == null)
             {
                 return NotFound();
             }
 
-            var phase = await _context.Phases
+            var stage = await _context.Stages
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (phase == null)
+            if (stage == null)
             {
                 return NotFound();
             }
 
-            return View(phase);
+            return View(stage);
         }
 
-        // POST: Phases/Delete/5
+        // POST: Stages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            if (_context.Phases == null)
+            if (_context.Stages == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Phases'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Stages'  is null.");
             }
-            var phase = await _context.Phases.FindAsync(id);
-            if (phase != null)
+            var stage = await _context.Stages.FindAsync(id);
+            if (stage != null)
             {
-                _context.Phases.Remove(phase);
+                _context.Stages.Remove(stage);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PhaseExists(long id)
+        private bool StageExists(long id)
         {
-          return _context.Phases.Any(e => e.Id == id);
+            return _context.Stages.Any(e => e.Id == id);
         }
     }
 }

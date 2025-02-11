@@ -46,14 +46,7 @@ else
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a asp-controller="Stagiaires" asp-action="Index" class="nav-link @Url.MakeActiveClass("stagiaires","index")">
-                            <i class="nav-icon fas fa-lock"></i>
-                            <p>
-                                Stagiaires
-                            </p>
-                        </a>
-                    </li>
+                    
                     @if (User.IsInRole(Roles.SuperAdmin.ToString()))
                     {
                         <li class="nav-item ">
@@ -72,8 +65,46 @@ else
                                 </p>
                             </a>
                         </li>
+
+
                   
 
+                    }
+
+                    @if (User.IsInRole(Roles.Admin.ToString()))
+                    {
+                        <li class="nav-item ">
+                            <a asp-controller="Stagiaires" asp-action="Index" class="nav-link @Url.MakeActiveClass("stagiaires","index")">
+                                <i class="nav-icon fas fa-lock"></i>
+                                <p>
+                                    Stagiaires
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a asp-controller="Specialites" asp-action="Index" class="nav-link @Url.MakeActiveClass("Specialites","index")">
+                                <i class="nav-icon fas fa-lock"></i>
+                                <p>
+                                    Specialités
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a asp-controller="Stages" asp-action="Index" class="nav-link @Url.MakeActiveClass("Stages","index")">
+                                <i class="nav-icon fas fa-lock"></i>
+                                <p>
+                                    Stage
+                                </p>
+                            </a>
+                        </li>
+                         <li class="nav-item ">
+                            <a asp-controller="Phases" asp-action="Index" class="nav-link @Url.MakeActiveClass("Phases","index")">
+                                <i class="nav-icon fas fa-lock"></i>
+                                <p>
+                                    Phases
+                                </p>
+                            </a>
+                        </li>
                     }
                 }
                
