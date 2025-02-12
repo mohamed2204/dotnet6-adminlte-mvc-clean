@@ -338,3 +338,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/AdminLTE.MVC/data.db-shm
+/AdminLTE.MVC/data.db-wal
+/AdminLTE.MVC/data.db-shm
+/AdminLTE.MVC/data.db-wal

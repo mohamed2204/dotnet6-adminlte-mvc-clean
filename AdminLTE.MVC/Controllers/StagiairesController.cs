@@ -8,87 +8,92 @@ using Microsoft.EntityFrameworkCore;
 using AdminLTE.MVC.Data;
 using AdminLTE.MVC.Models;
 
-namespace AdminLTE.MVC
+namespace AdminLTE.MVC.Controllers
 {
-    public class SpecialitesController : Controller
+    public class StagiairesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SpecialitesController(ApplicationDbContext context)
+        public StagiairesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Specialites
+        // GET: Stagiaires
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Specialites.ToListAsync());
+            var applicationDbContext = _context.Stagiaires.Include(s => s.Specialite);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Specialites/Details/5
+        // GET: Stagiaires/Details/5
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null || _context.Specialites == null)
+            if (id == null || _context.Stagiaires == null)
             {
                 return NotFound();
             }
 
-            var specialite = await _context.Specialites
+            var stagiaire = await _context.Stagiaires
+                .Include(s => s.Specialite)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (specialite == null)
+            if (stagiaire == null)
             {
                 return NotFound();
             }
 
-            return View(specialite);
+            return View(stagiaire);
         }
 
-        // GET: Specialites/Create
+        // GET: Stagiaires/Create
         public IActionResult Create()
         {
+            ViewData["SpecialiteId"] = new SelectList(_context.Specialites, "Id", "Name");
             return View();
         }
 
-        // POST: Specialites/Create
+        // POST: Stagiaires/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Specialite specialite)
+        public async Task<IActionResult> Create([Bind("Id,Grade,Prenom,Nom,Mle,Cin,NomAr,PrenomAr,SpecialiteId,Branche,Promotion")] Stagiaire stagiaire)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(specialite);
+                _context.Add(stagiaire);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(specialite);
+            ViewData["SpecialiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaire.SpecialiteId);
+            return View(stagiaire);
         }
 
-        // GET: Specialites/Edit/5
+        // GET: Stagiaires/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null || _context.Specialites == null)
+            if (id == null || _context.Stagiaires == null)
             {
                 return NotFound();
             }
 
-            var specialite = await _context.Specialites.FindAsync(id);
-            if (specialite == null)
+            var stagiaire = await _context.Stagiaires.FindAsync(id);
+            if (stagiaire == null)
             {
                 return NotFound();
             }
-            return View(specialite);
+            ViewData["SpecialiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaire.SpecialiteId);
+            return View(stagiaire);
         }
 
-        // POST: Specialites/Edit/5
+        // POST: Stagiaires/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name")] Specialite specialite)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Grade,Prenom,Nom,Mle,Cin,NomAr,PrenomAr,SpecialiteId,Branche,Promotion")] Stagiaire stagiaire)
         {
-            if (id != specialite.Id)
+            if (id != stagiaire.Id)
             {
                 return NotFound();
             }
@@ -97,12 +102,12 @@ namespace AdminLTE.MVC
             {
                 try
                 {
-                    _context.Update(specialite);
+                    _context.Update(stagiaire);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SpecialiteExists(specialite.Id))
+                    if (!StagiaireExists(stagiaire.Id))
                     {
                         return NotFound();
                     }
@@ -113,49 +118,51 @@ namespace AdminLTE.MVC
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(specialite);
+            ViewData["SpecialiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaire.SpecialiteId);
+            return View(stagiaire);
         }
 
-        // GET: Specialites/Delete/5
+        // GET: Stagiaires/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null || _context.Specialites == null)
+            if (id == null || _context.Stagiaires == null)
             {
                 return NotFound();
             }
 
-            var specialite = await _context.Specialites
+            var stagiaire = await _context.Stagiaires
+                .Include(s => s.Specialite)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (specialite == null)
+            if (stagiaire == null)
             {
                 return NotFound();
             }
 
-            return View(specialite);
+            return View(stagiaire);
         }
 
-        // POST: Specialites/Delete/5
+        // POST: Stagiaires/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            if (_context.Specialites == null)
+            if (_context.Stagiaires == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Specialites'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Stagiaires'  is null.");
             }
-            var specialite = await _context.Specialites.FindAsync(id);
-            if (specialite != null)
+            var stagiaire = await _context.Stagiaires.FindAsync(id);
+            if (stagiaire != null)
             {
-                _context.Specialites.Remove(specialite);
+                _context.Stagiaires.Remove(stagiaire);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SpecialiteExists(long id)
+        private bool StagiaireExists(long id)
         {
-          return _context.Specialites.Any(e => e.Id == id);
+            return _context.Stagiaires.Any(e => e.Id == id);
         }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AdminLTE.MVC.Data;
 using AdminLTE.MVC.Models;
 
-namespace AdminLTE.MVC
+namespace AdminLTE.MVC.Controllers
 {
     public class StagePhasesController : Controller
     {
@@ -167,14 +167,14 @@ namespace AdminLTE.MVC
             {
                 _context.StagePhases.Remove(stagePhase);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StagePhaseExists(long id)
         {
-          return _context.StagePhases.Any(e => e.StageId == id);
+            return _context.StagePhases.Any(e => e.StageId == id);
         }
     }
 }

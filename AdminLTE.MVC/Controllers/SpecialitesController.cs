@@ -8,87 +8,87 @@ using Microsoft.EntityFrameworkCore;
 using AdminLTE.MVC.Data;
 using AdminLTE.MVC.Models;
 
-namespace AdminLTE.MVC
+namespace AdminLTE.MVC.Controllers
 {
-    public class StagesController : Controller
+    public class SpecialitesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public StagesController(ApplicationDbContext context)
+        public SpecialitesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Stages
+        // GET: Specialites
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Stages.ToListAsync());
+            return View(await _context.Specialites.ToListAsync());
         }
 
-        // GET: Stages/Details/5
+        // GET: Specialites/Details/5
         public async Task<IActionResult> Details(long? id)
         {
-            if (id == null || _context.Stages == null)
+            if (id == null || _context.Specialites == null)
             {
                 return NotFound();
             }
 
-            var stage = await _context.Stages
+            var specialite = await _context.Specialites
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (stage == null)
+            if (specialite == null)
             {
                 return NotFound();
             }
 
-            return View(stage);
+            return View(specialite);
         }
 
-        // GET: Stages/Create
+        // GET: Specialites/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Stages/Create
+        // POST: Specialites/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Promotion")] Stage stage)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Specialite specialite)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(stage);
+                _context.Add(specialite);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(stage);
+            return View(specialite);
         }
 
-        // GET: Stages/Edit/5
+        // GET: Specialites/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null || _context.Stages == null)
+            if (id == null || _context.Specialites == null)
             {
                 return NotFound();
             }
 
-            var stage = await _context.Stages.FindAsync(id);
-            if (stage == null)
+            var specialite = await _context.Specialites.FindAsync(id);
+            if (specialite == null)
             {
                 return NotFound();
             }
-            return View(stage);
+            return View(specialite);
         }
 
-        // POST: Stages/Edit/5
+        // POST: Specialites/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,Promotion")] Stage stage)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name")] Specialite specialite)
         {
-            if (id != stage.Id)
+            if (id != specialite.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace AdminLTE.MVC
             {
                 try
                 {
-                    _context.Update(stage);
+                    _context.Update(specialite);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StageExists(stage.Id))
+                    if (!SpecialiteExists(specialite.Id))
                     {
                         return NotFound();
                     }
@@ -113,49 +113,49 @@ namespace AdminLTE.MVC
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(stage);
+            return View(specialite);
         }
 
-        // GET: Stages/Delete/5
+        // GET: Specialites/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null || _context.Stages == null)
+            if (id == null || _context.Specialites == null)
             {
                 return NotFound();
             }
 
-            var stage = await _context.Stages
+            var specialite = await _context.Specialites
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (stage == null)
+            if (specialite == null)
             {
                 return NotFound();
             }
 
-            return View(stage);
+            return View(specialite);
         }
 
-        // POST: Stages/Delete/5
+        // POST: Specialites/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            if (_context.Stages == null)
+            if (_context.Specialites == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Stages'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Specialites'  is null.");
             }
-            var stage = await _context.Stages.FindAsync(id);
-            if (stage != null)
+            var specialite = await _context.Specialites.FindAsync(id);
+            if (specialite != null)
             {
-                _context.Stages.Remove(stage);
+                _context.Specialites.Remove(specialite);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StageExists(long id)
+        private bool SpecialiteExists(long id)
         {
-          return _context.Stages.Any(e => e.Id == id);
+            return _context.Specialites.Any(e => e.Id == id);
         }
     }
 }
