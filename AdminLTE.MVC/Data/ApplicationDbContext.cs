@@ -10,9 +10,7 @@ namespace AdminLTE.MVC.Data
     {
 
         //entities
-        //public virtual DbSet<Stagiaire> Students { get; set; }
         public virtual DbSet<Matiere> Matieres { get; set; }
-
         public virtual DbSet<Phase> Phases { get; set; }
         public virtual DbSet<Specialite> Specialites { get; set; }
         public virtual DbSet<Stage> Stages { get; set; }
@@ -77,27 +75,21 @@ namespace AdminLTE.MVC.Data
             builder.Entity<Stage>(entity =>
             {
                 entity.Property(e => e.Name).IsRequired();
-
                 entity.Property(e => e.Promotion).IsRequired();
             });
 
             builder.Entity<StagePhase>(entity =>
             {
                 entity.HasKey(e => new { e.StageId, e.PhaseId, e.SpecialileId });
-
                 entity.HasIndex(e => e.PhaseId, "IX_StagePhases_PhaseId");
-
                 entity.Property(e => e.AddedOn).IsRequired();
-
                 entity.HasOne(d => d.Phase)
                     .WithMany(p => p.StagePhases)
                     .HasForeignKey(d => d.PhaseId);
-
                 entity.HasOne(d => d.Specialile)
                     .WithMany(p => p.StagePhases)
                     .HasForeignKey(d => d.SpecialileId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
-
                 entity.HasOne(d => d.Stage)
                     .WithMany(p => p.StagePhases)
                     .HasForeignKey(d => d.StageId);
@@ -113,16 +105,12 @@ namespace AdminLTE.MVC.Data
             builder.Entity<StagiaireStage>(entity =>
             {
                 entity.HasKey(e => new { e.StagiaireId, e.StageId, e.SpecilaiteId });
-
                 entity.Property(e => e.DateDebut).IsRequired();
-
                 entity.Property(e => e.DateFin).IsRequired();
-
                 entity.HasOne(d => d.Specilaite)
                     .WithMany(p => p.StagiaireStages)
                     .HasForeignKey(d => d.SpecilaiteId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
-
                 entity.HasOne(d => d.Stagiaire)
                     .WithMany(p => p.StagiaireStages)
                     .HasForeignKey(d => d.StagiaireId)
