@@ -38,10 +38,20 @@
 											<thead>
 												<tr>
 													<th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending">
-														@Html.DisplayNameFor(model => model.Stagiaire)
+														@* @Html.DisplayNameFor(model => model.Stagiaire.Nom) *@
+														Grade
 													</th>
 													<th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending">
-														@Html.DisplayNameFor(model => model.Specilaite)
+														@* @Html.DisplayNameFor(model => model.Stagiaire.Nom) *@
+														Prénom
+													</th>
+													<th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending">
+														@* @Html.DisplayNameFor(model => model.Stagiaire.Nom) *@
+														Nom
+													</th>
+													<th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending">
+														@* @Html.DisplayNameFor(model => model.Specialite.Name) *@
+														Spécialite
 													</th>
 													<th class="sorting sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending">
 														@Html.DisplayNameFor(model => model.DateDebut)
@@ -58,10 +68,16 @@
 												{
 													<tr class="odd">
 														<td class="dtr-control sorting_1" tabindex="0">
-															@item.Stagiaire
+															@item.Stagiaire.Grade
 														</td>
 														<td class="dtr-control sorting_1" tabindex="0">
-															@item.Specialite
+															@item.Stagiaire.Prenom
+														</td>
+														<td class="dtr-control sorting_1" tabindex="0">
+															@item.Stagiaire.Nom
+														</td>
+														<td class="dtr-control sorting_1" tabindex="0">
+															@item.Specialite.Name
 														</td>
 														<td class="dtr-control sorting_1" tabindex="0">
 															@item.DateDebut
@@ -71,9 +87,9 @@
 														</td>
 														
 														<td class="dtr-control sorting_1" tabindex="0">
-															<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success">Edit</a> |
-															<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a> |
-															<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-success">Delete</a>
+															<a asp-action="Edit" asp-route-id="@item.Stagiaire.Id" class="btn btn-success">Edit</a> |
+															<a asp-action="Details" asp-route-id="@item.Stagiaire.Id" class="btn btn-success">Details</a> |
+															<a asp-action="Delete" asp-route-id="@item.Stagiaire.Id" class="btn btn-success">Delete</a>
 														</td>
 													</tr>
 												}

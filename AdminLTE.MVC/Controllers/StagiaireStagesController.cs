@@ -27,7 +27,7 @@ namespace AdminLTE.MVC.Controllers
             //var applicationDbContext = _context.StagiaireStages.Include(s => s.Specilaite).Include(s => s.Stagiaire);
             //return View(await applicationDbContext.ToListAsync());
 
-            var items = await _context.StagiaireStages.Include(s => s.Specilaite).Include(s => s.Stagiaire).ToListAsync();
+            var items = await _context.StagiaireStages.Include(s => s.Specialite).Include(s => s.Stagiaire).ToListAsync();
 
             var pageNumber = page ?? 1;
             // if no page was specified in the querystring, default to the first page (1)
@@ -56,7 +56,7 @@ namespace AdminLTE.MVC.Controllers
             }
 
             var stagiaireStage = await _context.StagiaireStages
-                .Include(s => s.Specilaite)
+                .Include(s => s.Specialite)
                 .Include(s => s.Stagiaire)
                 .FirstOrDefaultAsync(m => m.StagiaireId == id);
             if (stagiaireStage == null)
@@ -157,7 +157,7 @@ namespace AdminLTE.MVC.Controllers
             }
 
             var stagiaireStage = await _context.StagiaireStages
-                .Include(s => s.Specilaite)
+                .Include(s => s.Specialite)
                 .Include(s => s.Stagiaire)
                 .FirstOrDefaultAsync(m => m.StagiaireId == id);
             if (stagiaireStage == null)

@@ -94,7 +94,7 @@ namespace AdminLTE.MVC.Data
                 entity.HasKey(e => new { e.StagiaireId, e.StageId, e.SpecilaiteId });
                 entity.Property(e => e.DateDebut).IsRequired();
                 entity.Property(e => e.DateFin).IsRequired();
-                entity.HasOne(d => d.Specilaite)
+                entity.HasOne(d => d.Specialite)
                     .WithMany(p => p.StagiaireStages)
                     .HasForeignKey(d => d.SpecilaiteId)
                     .OnDelete(DeleteBehavior.ClientSetNull);

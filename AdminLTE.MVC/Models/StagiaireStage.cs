@@ -11,7 +11,7 @@ namespace AdminLTE.MVC.Models
         public string DateDebut { get; set; }
         public string DateFin { get; set; }
 
-        public virtual Specialite Specilaite { get; set; }
+        public virtual Specialite Specialite { get; set; }
         public virtual Stagiaire Stagiaire { get; set; }
     }
 }
