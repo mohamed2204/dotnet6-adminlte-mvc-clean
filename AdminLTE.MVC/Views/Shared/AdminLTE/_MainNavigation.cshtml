@@ -74,7 +74,7 @@ else
                     @if (User.IsInRole(Roles.Admin.ToString()))
                     {
                         <li class="nav-item ">
-                            <a asp-controller="Stagiaires" asp-action="Index" class="nav-link @Url.MakeActiveClass("stagiaires","index")">
+                            <a asp-controller="StagiaireStages" asp-action="Index" class="nav-link @Url.MakeActiveClass("StagiaireStages","index")">
                                 <i class="nav-icon fas fa-lock"></i>
                                 <p>
                                     Stagiaires

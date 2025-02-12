@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdminLTE.MVC.Data;
 using AdminLTE.MVC.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using X.PagedList;
 
 namespace AdminLTE.MVC.Controllers
 {
@@ -20,10 +22,29 @@ namespace AdminLTE.MVC.Controllers
         }
 
         // GET: StagiaireStages
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page, string sortOrder)
         {
-            var applicationDbContext = _context.StagiaireStages.Include(s => s.Specilaite).Include(s => s.Stagiaire);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.StagiaireStages.Include(s => s.Specilaite).Include(s => s.Stagiaire);
+            //return View(await applicationDbContext.ToListAsync());
+
+            var items = await _context.StagiaireStages.Include(s => s.Specilaite).Include(s => s.Stagiaire).ToListAsync();
+
+            var pageNumber = page ?? 1;
+            // if no page was specified in the querystring, default to the first page (1)
+
+            int pageSize = 15;
+
+            IPagedList<StagiaireStage> onePageOfItems = new PagedList<StagiaireStage>(items, pageNumber, pageSize);
+
+
+            // return a 404 if user browses to pages beyond last page. special case first page if no items exist
+            if (onePageOfItems.PageNumber != 1 && page > onePageOfItems.PageCount)
+            {
+                return NotFound();
+            }
+
+            ViewBag.OnePageOfItems = onePageOfItems;
+            return View();
         }
 
         // GET: StagiaireStages/Details/5
