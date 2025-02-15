@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    alert('(document).ready');
+    //alert('(document).ready');
     $("#customerDatatable").DataTable({
         "processing": true,
         "serverSide": true,

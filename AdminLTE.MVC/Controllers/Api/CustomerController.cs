@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using X.PagedList;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using AdminLTE.MVC.ViewModel;
 
 namespace AdminLTE.MVC.Controllers.Api
 {
@@ -59,14 +60,30 @@ namespace AdminLTE.MVC.Controllers.Api
 
                 var data = customerData.Skip(skip).Take(pageSize).ToList();
 
-                JsonSerializerOptions options = new()
-                {
-                    ReferenceHandler = ReferenceHandler.Preserve,
-                    WriteIndented = false
-                };
-                string items = JsonSerializer.Serialize(data, options);
+                var data2 = new List<StagiaireDataModel>();
 
-                var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, items };
+                foreach (var item in data)
+                {
+                    var nr = new StagiaireDataModel
+                    {
+                        id = item.StagiaireId,
+                        grade = item.Stagiaire.Grade,
+                        prenom = item.Stagiaire.Prenom,
+                        specialite = item.Specialite.Name,
+                        dateDebut = item.DateDebut,
+                        dateFin = item.DateFin
+                    };
+                    data2.Add(nr);
+                }
+
+                //JsonSerializerOptions options = new()
+                //{
+                //    ReferenceHandler = ReferenceHandler.Preserve,
+                //    WriteIndented = false
+                //};
+                string items = JsonSerializer.Serialize(data2);
+
+                var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data= items };
                 return Ok(jsonData);
 
             }
