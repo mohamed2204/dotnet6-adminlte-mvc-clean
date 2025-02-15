@@ -12,6 +12,8 @@ using X.PagedList;
 
 namespace AdminLTE.MVC.Controllers
 {
+    //[Route("api/[controller]")]
+    //[ApiController]
     public class StagiaireStagesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -190,6 +192,50 @@ namespace AdminLTE.MVC.Controllers
         private bool StagiaireStageExists(long id)
         {
             return _context.StagiaireStages.Any(e => e.StagiaireId == id);
+        }
+
+
+        [HttpPost]
+        public IActionResult GetCustomers(StagiaireStage stagiaireStage)
+        {
+
+            
+
+            try
+            {
+                var draw = Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][nom]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                //var customerData = (from tempcustomer in _context.StagiaireStages select tempcustomer);
+                var customerData = _context.StagiaireStages.Include(s => s.Specialite).Include(s => s.Stagiaire);
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    //customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    customerData = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<StagiaireStage, Stagiaire>)customerData.Where(
+                                                m => m.Stagiaire.Nom.Contains(searchValue)
+                                                || m.Stagiaire.Prenom.Contains(searchValue)
+                                                || m.Stagiaire.Mle.Contains(searchValue)
+                                                || m.Specialite.Name.Contains(searchValue));
+                }
+                recordsTotal = customerData.Count();
+                var data = customerData.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
