@@ -9,6 +9,8 @@ using AdminLTE.MVC.Data;
 using AdminLTE.MVC.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using X.PagedList;
+using System.Linq.Dynamic.Core;
+
 
 namespace AdminLTE.MVC.Controllers
 {
@@ -90,7 +92,7 @@ namespace AdminLTE.MVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecilaiteId);
+            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
             ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
             return View(stagiaireStage);
         }
@@ -108,7 +110,7 @@ namespace AdminLTE.MVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecilaiteId);
+            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
             ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
             return View(stagiaireStage);
         }
@@ -145,7 +147,7 @@ namespace AdminLTE.MVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecilaiteId);
+            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
             ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
             return View(stagiaireStage);
         }
@@ -205,6 +207,7 @@ namespace AdminLTE.MVC.Controllers
             {
                 var draw = Request.Form["draw"].FirstOrDefault();
                 var start = Request.Form["start"].FirstOrDefault();
+
                 var length = Request.Form["length"].FirstOrDefault();
                 var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][nom]"].FirstOrDefault();
                 var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
@@ -228,7 +231,7 @@ namespace AdminLTE.MVC.Controllers
                 }
                 recordsTotal = customerData.Count();
                 var data = customerData.Skip(skip).Take(pageSize).ToList();
-                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
                 return Ok(jsonData);
 
             }
@@ -236,6 +239,72 @@ namespace AdminLTE.MVC.Controllers
             {
                 throw;
             }
+        }
+
+        [HttpPost]
+        public ActionResult GetList()
+        {
+            /*
+            //Server Side Parameter
+            int start = Convert.ToInt32(Request["start"]);
+            int length = Convert.ToInt32(Request["length"]);
+            string searchValue = Request["search[value]"];
+            string sortColumnName = Request["columns[" + Request["order[0][column]"] + "][name]"];
+            string sortDirection = Request["order[0][dir]"];
+            */
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Convert.ToInt32(Request.Form["start"].FirstOrDefault());
+            var length = Convert.ToInt32(Request.Form["length"].FirstOrDefault());
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][nom]"].FirstOrDefault();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            //int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            //int skip = start != null ? Convert.ToInt32(start) : 0;
+            //int recordsTotal = 0;
+
+            List<StagiaireStage> empList = new List<StagiaireStage>();
+
+            using (_context)
+            {
+               
+                empList = _context.StagiaireStages.ToList<StagiaireStage>();
+
+                IQueryable<StagiaireStage> stagiaires = empList.AsQueryable();
+
+                int totalrows = stagiaires.Count();
+                if (!string.IsNullOrEmpty(searchValue))//filter
+                {
+                    empList = stagiaires.
+                        Where(x => x.Stagiaire.Nom.ToLower().Contains(searchValue.ToLower()) || 
+                        x.Stagiaire.Prenom.ToLower().Contains(searchValue.ToLower()) || 
+                        x.Specialite.Name.ToLower().Contains(searchValue.ToLower()) || 
+                        //x.Age.ToString().Contains(searchValue.ToLower()) || 
+                        x.Stagiaire.Mle.ToString().Contains(searchValue.ToLower())).ToList<StagiaireStage>();
+                }
+                int totalrowsafterfiltering = empList.Count;
+                //sorting
+                //empList = stagiaires.OrderBy(sortColumn + " " + sortColumnDirection).ToList<StagiaireStage>();
+
+                //paging
+                empList = empList.Skip(start).Take(length).ToList<StagiaireStage>();
+
+                var jsonData = new
+                {
+                    //Name = "Pranaya",
+                    //ID = 4,
+                    //DateOfBirth = new DateTime(1988, 02, 29)
+                    data = empList,
+                    draw,
+                    recordsTotal = totalrows,
+                    recordsFiltered = totalrowsafterfiltering
+                };
+                // Returning a JsonResult object with the jsonData as the content to be serialized to JSON
+                return new JsonResult(jsonData);
+
+                //return Json(new { data = empList, draw = draw, recordsTotal = totalrows, recordsFiltered = totalrowsafterfiltering }, JsonRequestBehavior.AllowGet);
+            }
+
+
         }
     }
 }

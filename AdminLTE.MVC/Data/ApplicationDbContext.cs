@@ -91,12 +91,12 @@ namespace AdminLTE.MVC.Data
 
             builder.Entity<StagiaireStage>(entity =>
             {
-                entity.HasKey(e => new { e.StagiaireId, e.StageId, e.SpecilaiteId });
+                entity.HasKey(e => new { e.StagiaireId, e.StageId, e.SpecialiteId });
                 entity.Property(e => e.DateDebut).IsRequired();
                 entity.Property(e => e.DateFin).IsRequired();
                 entity.HasOne(d => d.Specialite)
                     .WithMany(p => p.StagiaireStages)
-                    .HasForeignKey(d => d.SpecilaiteId)
+                    .HasForeignKey(d => d.SpecialiteId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
                 entity.HasOne(d => d.Stagiaire)
                     .WithMany(p => p.StagiaireStages)

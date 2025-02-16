@@ -5,7 +5,7 @@
         "serverSide": true,
         "filter": true,
         "ajax": {
-            "url": "/api/customer",
+            "url": "/StagiaireStages/GetList",
             "type": "POST",
             "datatype": "json"
         },
