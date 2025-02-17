@@ -197,49 +197,6 @@ namespace AdminLTE.MVC.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult GetCustomers(StagiaireStage stagiaireStage)
-        {
-
-            
-
-            try
-            {
-                var draw = Request.Form["draw"].FirstOrDefault();
-                var start = Request.Form["start"].FirstOrDefault();
-
-                var length = Request.Form["length"].FirstOrDefault();
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][nom]"].FirstOrDefault();
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-                var searchValue = Request.Form["search[value]"].FirstOrDefault();
-                int pageSize = length != null ? Convert.ToInt32(length) : 0;
-                int skip = start != null ? Convert.ToInt32(start) : 0;
-                int recordsTotal = 0;
-                //var customerData = (from tempcustomer in _context.StagiaireStages select tempcustomer);
-                var customerData = _context.StagiaireStages.Include(s => s.Specialite).Include(s => s.Stagiaire);
-                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-                {
-                    //customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
-                }
-                if (!string.IsNullOrEmpty(searchValue))
-                {
-                    customerData = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<StagiaireStage, Stagiaire>)customerData.Where(
-                                                m => m.Stagiaire.Nom.Contains(searchValue)
-                                                || m.Stagiaire.Prenom.Contains(searchValue)
-                                                || m.Stagiaire.Mle.Contains(searchValue)
-                                                || m.Specialite.Name.Contains(searchValue));
-                }
-                recordsTotal = customerData.Count();
-                var data = customerData.Skip(skip).Take(pageSize).ToList();
-                var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
-                return Ok(jsonData);
-
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
 
         [HttpPost]
         public ActionResult GetList()
@@ -266,7 +223,7 @@ namespace AdminLTE.MVC.Controllers
 
             using (_context)
             {
-               
+
                 empList = _context.StagiaireStages.ToList<StagiaireStage>();
 
                 IQueryable<StagiaireStage> stagiaires = empList.AsQueryable();
@@ -275,9 +232,9 @@ namespace AdminLTE.MVC.Controllers
                 if (!string.IsNullOrEmpty(searchValue))//filter
                 {
                     empList = stagiaires.
-                        Where(x => x.Stagiaire.Nom.ToLower().Contains(searchValue.ToLower()) || 
-                        x.Stagiaire.Prenom.ToLower().Contains(searchValue.ToLower()) || 
-                        x.Specialite.Name.ToLower().Contains(searchValue.ToLower()) || 
+                        Where(x => x.Stagiaire.Nom.ToLower().Contains(searchValue.ToLower()) ||
+                        x.Stagiaire.Prenom.ToLower().Contains(searchValue.ToLower()) ||
+                        x.Specialite.Name.ToLower().Contains(searchValue.ToLower()) ||
                         //x.Age.ToString().Contains(searchValue.ToLower()) || 
                         x.Stagiaire.Mle.ToString().Contains(searchValue.ToLower())).ToList<StagiaireStage>();
                 }
@@ -305,6 +262,49 @@ namespace AdminLTE.MVC.Controllers
             }
 
 
+        }
+
+        public IActionResult GetList2()
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var pageSize = int.Parse(Request.Form["length"]);
+            var skip = int.Parse(Request.Form["start"]);
+
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+            var sortColumn = Request.Form[string.Concat("columns[", Request.Form["order[0][column]"], "][name]")];
+            var sortColumnDirection = Request.Form["order[0][dir]"];
+
+            IQueryable<StagiaireStage> customers = _context.StagiaireStages.Where(m => string.IsNullOrEmpty(searchValue)
+                ? true
+                : (m.Stagiaire.Nom.ToLower().Contains(searchValue.ToLower()) ||
+                m.Stagiaire.Prenom.ToLower().Contains(searchValue.ToLower()) ||
+                m.Stagiaire.Mle.ToLower().Contains(searchValue.ToLower()) ||
+                m.Stagiaire.Specialite.Name.ToLower().Contains(searchValue.ToLower())));
+
+            //sorting
+            //if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+            //    customers = customers.OrderBy(string.Concat(sortColumn, " ", sortColumnDirection));
+
+            //paging
+            var data = customers.Skip(skip).Take(pageSize);
+
+            var data2 = data.Select(d => new
+            {
+                id = string.Concat(d.StagiaireId, "-", d.StageId, "-", d.SpecialiteId),
+                grade = d.Stagiaire.Grade,
+                prenom = d.Stagiaire.Prenom,
+                nom = d.Stagiaire.Nom,
+                specialite = d.Specialite.Name,
+                dateDebut = d.DateDebut,
+                dateFin = d.DateFin
+            }).ToList();
+
+            var recordsTotal = customers.Count();
+
+            var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data = data2 };
+
+            return Ok(jsonData);
         }
     }
 }
