@@ -262,26 +262,75 @@ namespace AdminLTE.MVC.Controllers
             //int skip = start != null ? Convert.ToInt32(start) : 0;
             //int recordsTotal = 0;
 
-            List<StagiaireStage> empList = new List<StagiaireStage>();
+            //List<StagiaireStage> empList = new List<StagiaireStage>();
 
             using (_context)
             {
                
-                empList = _context.StagiaireStages.ToList<StagiaireStage>();
+                //empList = _context.StagiaireStages.Include(s => s.Stagiaire).Include(s => s.Specialite).ToList<StagiaireStage>();
 
-                IQueryable<StagiaireStage> stagiaires = empList.AsQueryable();
+                 var stagiaires = _context.StagiaireStages
+                    .Include(s => s.Stagiaire)
+                    .Include(s => s.Specialite)
+                    .ToArray();
+
+
+
+                var query = stagiaires.AsQueryable().Select(x => new
+                {
+                    id = x.StagiaireId + "-" + x.StageId + "-" + x.SpecialiteId,
+                    grade = x.Stagiaire.Grade,
+                    prenom = x.Stagiaire.Prenom,
+                    nom = x.Stagiaire.Nom,
+                    mle = x.Stagiaire.Mle,
+                    specialite = x.Specialite.Name,
+                    dateDebut = x.DateDebut,
+                    dateFin = x.DateFin
+                });
+
+
+                /*
+                 * 
+                 * .Select(
+                            x => new { 
+                                id = x.StagiaireId + "-" + x.StageId + "-" + x.SpecialiteId,
+                                x.Stagiaire.Grade,
+                                x.Stagiaire.Prenom,
+                                x.Stagiaire.Nom,
+                                x.Stagiaire.Mle,
+                                specialite = x.Specialite.Name,
+                                dateDebut = x.DateDebut,
+                                dateFin = x.DateFin
+                            })
+                 * */
+                //IQueryable requredDataFields = data.Select(x => new { x.Title, x.NestedObject });
+                //{ index, str = fruit.Substring(0, index) })
+
+                //.Select((fruit, index) =>
+                //    new { index, str = fruit.Substring(0, index) });
 
                 int totalrows = stagiaires.Count();
+
+                int totalrowsafterfiltering = stagiaires.Count();
+
+                List<StagiaireStage> empList = new List<StagiaireStage>();
+               
+
                 if (!string.IsNullOrEmpty(searchValue))//filter
                 {
-                    empList = stagiaires.
-                        Where(x => x.Stagiaire.Nom.ToLower().Contains(searchValue.ToLower()) || 
-                        x.Stagiaire.Prenom.ToLower().Contains(searchValue.ToLower()) || 
-                        x.Specialite.Name.ToLower().Contains(searchValue.ToLower()) || 
-                        //x.Age.ToString().Contains(searchValue.ToLower()) || 
-                        x.Stagiaire.Mle.ToString().Contains(searchValue.ToLower())).ToList<StagiaireStage>();
+                    empList = (List<StagiaireStage>)query.
+                                            Where(x => x.nom.ToLower().Contains(searchValue.ToLower()) ||
+                                            x.prenom.ToLower().Contains(searchValue.ToLower()) ||
+                                            x.specialite.ToLower().Contains(searchValue.ToLower()) ||
+                                            //x.Age.ToString().Contains(searchValue.ToLower()) || 
+                                            x.mle.ToLower().Contains(searchValue.ToLower()));
                 }
-                int totalrowsafterfiltering = empList.Count;
+                else
+                {
+                    //empList = query.ToList<StagiaireStage>();
+                }
+                
+                
                 //sorting
                 //empList = stagiaires.OrderBy(sortColumn + " " + sortColumnDirection).ToList<StagiaireStage>();
 
