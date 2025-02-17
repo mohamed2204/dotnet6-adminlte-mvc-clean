@@ -19,6 +19,7 @@ namespace AdminLTE.MVC.Controllers
     public class StagiaireStagesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private List<StagiaireStage> empList;
 
         public StagiaireStagesController(ApplicationDbContext context)
         {
@@ -201,7 +202,7 @@ namespace AdminLTE.MVC.Controllers
         public IActionResult GetCustomers(StagiaireStage stagiaireStage)
         {
 
-            
+
 
             try
             {
@@ -266,27 +267,14 @@ namespace AdminLTE.MVC.Controllers
 
             using (_context)
             {
-               
+
                 //empList = _context.StagiaireStages.Include(s => s.Stagiaire).Include(s => s.Specialite).ToList<StagiaireStage>();
 
-                 var stagiaires = _context.StagiaireStages
-                    .Include(s => s.Stagiaire)
-                    .Include(s => s.Specialite)
-                    .ToArray();
+                var stagiaires = _context.StagiaireStages
+                   .Include(s => s.Stagiaire)
+                   .Include(s => s.Specialite);
 
 
-
-                var query = stagiaires.AsQueryable().Select(x => new
-                {
-                    id = x.StagiaireId + "-" + x.StageId + "-" + x.SpecialiteId,
-                    grade = x.Stagiaire.Grade,
-                    prenom = x.Stagiaire.Prenom,
-                    nom = x.Stagiaire.Nom,
-                    mle = x.Stagiaire.Mle,
-                    specialite = x.Specialite.Name,
-                    dateDebut = x.DateDebut,
-                    dateFin = x.DateFin
-                });
 
 
                 /*
@@ -311,38 +299,52 @@ namespace AdminLTE.MVC.Controllers
 
                 int totalrows = stagiaires.Count();
 
-                int totalrowsafterfiltering = stagiaires.Count();
+                
 
-                List<StagiaireStage> empList = new List<StagiaireStage>();
-               
+                //List<StagiaireStage> empList = new List<StagiaireStage>();
+
 
                 if (!string.IsNullOrEmpty(searchValue))//filter
                 {
-                    empList = (List<StagiaireStage>)query.
-                                            Where(x => x.nom.ToLower().Contains(searchValue.ToLower()) ||
-                                            x.prenom.ToLower().Contains(searchValue.ToLower()) ||
-                                            x.specialite.ToLower().Contains(searchValue.ToLower()) ||
+                    IQueryable<StagiaireStage> empList = stagiaires.Where(
+                                            x => x.Stagiaire.Nom.ToLower().Contains(searchValue.ToLower()) ||
+                                            x.Stagiaire.Prenom.ToLower().Contains(searchValue.ToLower()) ||
+                                            x.Specialite.Name.ToLower().Contains(searchValue.ToLower()) ||
                                             //x.Age.ToString().Contains(searchValue.ToLower()) || 
-                                            x.mle.ToLower().Contains(searchValue.ToLower()));
+                                            x.Stagiaire.Mle.ToLower().Contains(searchValue.ToLower()));
                 }
                 else
                 {
                     //empList = query.ToList<StagiaireStage>();
                 }
-                
-                
+
+
                 //sorting
                 //empList = stagiaires.OrderBy(sortColumn + " " + sortColumnDirection).ToList<StagiaireStage>();
 
+                int totalrowsafterfiltering = empList.Count;
+
                 //paging
-                empList = empList.Skip(start).Take(length).ToList<StagiaireStage>();
+                empList = stagiaires.Skip(start).Take(length).ToList<StagiaireStage>();
+
+                var query = empList.AsQueryable().Select(x => new
+                {
+                    id = x.StagiaireId + "-" + x.StageId + "-" + x.SpecialiteId,
+                    grade = x.Stagiaire.Grade,
+                    prenom = x.Stagiaire.Prenom,
+                    nom = x.Stagiaire.Nom,
+                    mle = x.Stagiaire.Mle,
+                    specialite = x.Specialite.Name,
+                    dateDebut = x.DateDebut,
+                    dateFin = x.DateFin
+                }).ToList();
 
                 var jsonData = new
                 {
                     //Name = "Pranaya",
                     //ID = 4,
                     //DateOfBirth = new DateTime(1988, 02, 29)
-                    data = empList,
+                    data = query,
                     draw,
                     recordsTotal = totalrows,
                     recordsFiltered = totalrowsafterfiltering
