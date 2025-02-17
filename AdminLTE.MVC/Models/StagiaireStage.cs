@@ -7,11 +7,12 @@ namespace AdminLTE.MVC.Models
     {
         public long StagiaireId { get; set; }
         public long StageId { get; set; }
-        public long SpecilaiteId { get; set; }
+        public long SpecialiteId { get; set; }
         public string DateDebut { get; set; }
         public string DateFin { get; set; }
 
         public virtual Specialite Specialite { get; set; }
         public virtual Stagiaire Stagiaire { get; set; }
+        //public object Specialite { get; internal set; }
     }
 }
