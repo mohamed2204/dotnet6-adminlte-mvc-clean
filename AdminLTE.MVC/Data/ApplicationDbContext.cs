@@ -23,6 +23,12 @@ namespace AdminLTE.MVC.Data
             : base(options)
         {
         }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseJet(ConfigurationHelper.ConnectionString());
+        //}
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
