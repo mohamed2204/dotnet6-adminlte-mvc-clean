@@ -40,10 +40,13 @@ namespace AdminLTE.MVC
             //        Configuration.GetConnectionString("DefaultConnection")));
 
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlite(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //        options.UseSqlite(
+            //        Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDbContext<ApplicationDbContext>(options =>
+                   options.UseJet(
+                   Configuration.GetConnectionString("MsData")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
