@@ -23,8 +23,19 @@
             { "data": "dateDebut", "name": "Début", "autoWidth": true },
             { "data": "dateFin", "name": "Fin", "autoWidth": true },   
             {
-                "render": function (data, row) { return "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + row.id + "'); >Delete</a>"; }
+                "render": function (data, row) {
+                    var links = "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + data + "'); >View</a> | ";
+                    links += "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + data + "'); >Edit</a> | ";
+                    links += "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + row + "'); >Delete</a>";
+                    return links;
+
+                }
             },
         ]
     });
 });
+
+//function to write actual data of a table row
+function DeleteCustomer(e) {
+    console.log(e)
+}
