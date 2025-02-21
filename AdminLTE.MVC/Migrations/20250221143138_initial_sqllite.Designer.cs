@@ -11,13 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdminLTE.MVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250210133449_CreateStage_Phase")]
-    partial class CreateStage_Phase
+    [Migration("20250221143138_initial_sqllite")]
+    partial class initial_sqllite
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.35");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
 
             modelBuilder.Entity("AdminLTE.MVC.Models.ApplicationUser", b =>
                 {
@@ -71,9 +72,6 @@ namespace AdminLTE.MVC.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("BLOB");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -112,11 +110,12 @@ namespace AdminLTE.MVC.Migrations
 
             modelBuilder.Entity("AdminLTE.MVC.Models.Phase", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -124,16 +123,35 @@ namespace AdminLTE.MVC.Migrations
                     b.ToTable("Phases");
                 });
 
-            modelBuilder.Entity("AdminLTE.MVC.Models.Stage", b =>
+            modelBuilder.Entity("AdminLTE.MVC.Models.Specialite", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specialites");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.Stage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Promotion")
+                        .IsRequired()
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -141,9 +159,39 @@ namespace AdminLTE.MVC.Migrations
                     b.ToTable("Stages");
                 });
 
+            modelBuilder.Entity("AdminLTE.MVC.Models.StagePhase", b =>
+                {
+                    b.Property<long>("StageId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("PhaseId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("SpecialileId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AddedOn")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DateDebut")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DateFin")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("StageId", "PhaseId", "SpecialileId");
+
+                    b.HasIndex("SpecialileId");
+
+                    b.HasIndex(new[] { "PhaseId" }, "IX_StagePhases_PhaseId");
+
+                    b.ToTable("StagePhases");
+                });
+
             modelBuilder.Entity("AdminLTE.MVC.Models.Stagiaire", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -171,12 +219,43 @@ namespace AdminLTE.MVC.Migrations
                     b.Property<string>("PrenomAr")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Spec")
+                    b.Property<string>("Promotion")
                         .HasColumnType("TEXT");
+
+                    b.Property<long?>("SpecialiteId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students");
+                    b.HasIndex("SpecialiteId");
+
+                    b.ToTable("Stagiaires");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.StagiaireStage", b =>
+                {
+                    b.Property<long>("StagiaireId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("StageId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("SpecialiteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DateDebut")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DateFin")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("StagiaireId", "StageId", "SpecialiteId");
+
+                    b.HasIndex("SpecialiteId");
+
+                    b.ToTable("StagiaireStages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -307,6 +386,58 @@ namespace AdminLTE.MVC.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AdminLTE.MVC.Models.StagePhase", b =>
+                {
+                    b.HasOne("AdminLTE.MVC.Models.Phase", "Phase")
+                        .WithMany("StagePhases")
+                        .HasForeignKey("PhaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AdminLTE.MVC.Models.Specialite", "Specialile")
+                        .WithMany("StagePhases")
+                        .HasForeignKey("SpecialileId")
+                        .IsRequired();
+
+                    b.HasOne("AdminLTE.MVC.Models.Stage", "Stage")
+                        .WithMany("StagePhases")
+                        .HasForeignKey("StageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Phase");
+
+                    b.Navigation("Specialile");
+
+                    b.Navigation("Stage");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.Stagiaire", b =>
+                {
+                    b.HasOne("AdminLTE.MVC.Models.Specialite", "Specialite")
+                        .WithMany("Stagiaires")
+                        .HasForeignKey("SpecialiteId");
+
+                    b.Navigation("Specialite");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.StagiaireStage", b =>
+                {
+                    b.HasOne("AdminLTE.MVC.Models.Specialite", "Specialite")
+                        .WithMany("StagiaireStages")
+                        .HasForeignKey("SpecialiteId")
+                        .IsRequired();
+
+                    b.HasOne("AdminLTE.MVC.Models.Stagiaire", "Stagiaire")
+                        .WithMany("StagiaireStages")
+                        .HasForeignKey("StagiaireId")
+                        .IsRequired();
+
+                    b.Navigation("Specialite");
+
+                    b.Navigation("Stagiaire");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -356,6 +487,30 @@ namespace AdminLTE.MVC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.Phase", b =>
+                {
+                    b.Navigation("StagePhases");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.Specialite", b =>
+                {
+                    b.Navigation("StagePhases");
+
+                    b.Navigation("StagiaireStages");
+
+                    b.Navigation("Stagiaires");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.Stage", b =>
+                {
+                    b.Navigation("StagePhases");
+                });
+
+            modelBuilder.Entity("AdminLTE.MVC.Models.Stagiaire", b =>
+                {
+                    b.Navigation("StagiaireStages");
                 });
 #pragma warning restore 612, 618
         }

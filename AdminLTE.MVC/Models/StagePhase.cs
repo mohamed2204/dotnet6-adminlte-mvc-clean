@@ -5,6 +5,7 @@ namespace AdminLTE.MVC.Models
 {
     public partial class StagePhase
     {
+        //public long Id { get; set; }
         public long StageId { get; set; }
         public long PhaseId { get; set; }
         public long SpecialileId { get; set; }

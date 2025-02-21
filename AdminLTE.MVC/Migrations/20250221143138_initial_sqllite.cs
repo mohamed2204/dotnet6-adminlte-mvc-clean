@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AdminLTE.MVC.Migrations
 {
     /// <inheritdoc />
-    public partial class access2 : Migration
+    public partial class initial_sqllite : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +15,9 @@ namespace AdminLTE.MVC.Migrations
                 name: "Matieres",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "longchar", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,9 +28,9 @@ namespace AdminLTE.MVC.Migrations
                 name: "Phases",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "longchar", nullable: false)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,10 +41,10 @@ namespace AdminLTE.MVC.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Name = table.Column<string>(type: "longchar", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "longchar", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "longchar", nullable: true)
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,8 +55,8 @@ namespace AdminLTE.MVC.Migrations
                 name: "Specialites",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT(100)", nullable: false)
                 },
                 constraints: table =>
@@ -68,10 +68,10 @@ namespace AdminLTE.MVC.Migrations
                 name: "Stages",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "longchar", maxLength: 256, nullable: false),
-                    Promotion = table.Column<string>(type: "longchar", maxLength: 256, nullable: false)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    Promotion = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,24 +82,23 @@ namespace AdminLTE.MVC.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
-                    FirstName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    ProfilePicture = table.Column<byte[]>(type: "longbinary", nullable: true),
-                    UserName = table.Column<string>(type: "longchar", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "longchar", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "longchar", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "longchar", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "smallint", nullable: false),
-                    PasswordHash = table.Column<string>(type: "longchar", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "longchar", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "longchar", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "longchar", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "smallint", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "smallint", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "smallint", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,11 +109,11 @@ namespace AdminLTE.MVC.Migrations
                 name: "RoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    ClaimType = table.Column<string>(type: "longchar", nullable: true),
-                    ClaimValue = table.Column<string>(type: "longchar", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -131,18 +130,18 @@ namespace AdminLTE.MVC.Migrations
                 name: "Stagiaires",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
-                    Grade = table.Column<string>(type: "longchar", nullable: true),
-                    Prenom = table.Column<string>(type: "longchar", nullable: true),
-                    Nom = table.Column<string>(type: "longchar", nullable: true),
-                    Mle = table.Column<string>(type: "longchar", nullable: true),
-                    Cin = table.Column<string>(type: "longchar", nullable: true),
-                    NomAr = table.Column<string>(type: "longchar", nullable: true),
-                    PrenomAr = table.Column<string>(type: "longchar", nullable: true),
-                    SpecialiteId = table.Column<long>(type: "integer", nullable: true),
-                    Branche = table.Column<string>(type: "longchar", nullable: true),
-                    Promotion = table.Column<string>(type: "longchar", nullable: true)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Grade = table.Column<string>(type: "TEXT", nullable: true),
+                    Prenom = table.Column<string>(type: "TEXT", nullable: true),
+                    Nom = table.Column<string>(type: "TEXT", nullable: true),
+                    Mle = table.Column<string>(type: "TEXT", nullable: true),
+                    Cin = table.Column<string>(type: "TEXT", nullable: true),
+                    NomAr = table.Column<string>(type: "TEXT", nullable: true),
+                    PrenomAr = table.Column<string>(type: "TEXT", nullable: true),
+                    SpecialiteId = table.Column<long>(type: "INTEGER", nullable: true),
+                    Branche = table.Column<string>(type: "TEXT", nullable: true),
+                    Promotion = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -158,12 +157,12 @@ namespace AdminLTE.MVC.Migrations
                 name: "StagePhases",
                 columns: table => new
                 {
-                    StageId = table.Column<long>(type: "integer", nullable: false),
-                    PhaseId = table.Column<long>(type: "integer", nullable: false),
-                    SpecialileId = table.Column<long>(type: "integer", nullable: false),
-                    DateDebut = table.Column<string>(type: "longchar", nullable: true),
-                    DateFin = table.Column<string>(type: "longchar", nullable: true),
-                    AddedOn = table.Column<string>(type: "longchar", nullable: false)
+                    StageId = table.Column<long>(type: "INTEGER", nullable: false),
+                    PhaseId = table.Column<long>(type: "INTEGER", nullable: false),
+                    SpecialileId = table.Column<long>(type: "INTEGER", nullable: false),
+                    DateDebut = table.Column<string>(type: "TEXT", nullable: true),
+                    DateFin = table.Column<string>(type: "TEXT", nullable: true),
+                    AddedOn = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -191,11 +190,11 @@ namespace AdminLTE.MVC.Migrations
                 name: "UserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    ClaimType = table.Column<string>(type: "longchar", nullable: true),
-                    ClaimValue = table.Column<string>(type: "longchar", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -212,10 +211,10 @@ namespace AdminLTE.MVC.Migrations
                 name: "UserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "varchar(255)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "longchar", nullable: true),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -232,8 +231,8 @@ namespace AdminLTE.MVC.Migrations
                 name: "UserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    RoleId = table.Column<string>(type: "varchar(255)", nullable: false)
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -256,10 +255,10 @@ namespace AdminLTE.MVC.Migrations
                 name: "UserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Name = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Value = table.Column<string>(type: "longchar", nullable: true)
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -276,11 +275,11 @@ namespace AdminLTE.MVC.Migrations
                 name: "StagiaireStages",
                 columns: table => new
                 {
-                    StagiaireId = table.Column<long>(type: "integer", nullable: false),
-                    StageId = table.Column<long>(type: "integer", nullable: false),
-                    SpecialiteId = table.Column<long>(type: "integer", nullable: false),
-                    DateDebut = table.Column<string>(type: "longchar", nullable: false),
-                    DateFin = table.Column<string>(type: "longchar", nullable: false)
+                    StagiaireId = table.Column<long>(type: "INTEGER", nullable: false),
+                    StageId = table.Column<long>(type: "INTEGER", nullable: false),
+                    SpecialiteId = table.Column<long>(type: "INTEGER", nullable: false),
+                    DateDebut = table.Column<string>(type: "TEXT", nullable: false),
+                    DateFin = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -306,8 +305,7 @@ namespace AdminLTE.MVC.Migrations
                 name: "RoleNameIndex",
                 table: "Roles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "IGNORE NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_StagePhases_PhaseId",
@@ -353,8 +351,7 @@ namespace AdminLTE.MVC.Migrations
                 name: "UserNameIndex",
                 table: "Users",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "IGNORE NULL");
+                unique: true);
         }
 
         /// <inheritdoc />

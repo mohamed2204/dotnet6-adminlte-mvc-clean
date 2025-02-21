@@ -11,6 +11,6 @@ namespace AdminLTE.MVC.Models
         [Required, MaxLength(100)]
         public string LastName { get; set; }
 
-        public byte[] ProfilePicture { get; set; }
+        //public byte[] ProfilePicture { get; set; }
     }
 }

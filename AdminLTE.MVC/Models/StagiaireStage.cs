@@ -5,6 +5,7 @@ namespace AdminLTE.MVC.Models
 {
     public partial class StagiaireStage
     {
+        //public long Id { get; set; }
         public long StagiaireId { get; set; }
         public long StageId { get; set; }
         public long SpecialiteId { get; set; }
@@ -13,6 +14,6 @@ namespace AdminLTE.MVC.Models
 
         public virtual Specialite Specialite { get; set; }
         public virtual Stagiaire Stagiaire { get; set; }
-        //public object Specialite { get; internal set; }
+        
     }
 }
