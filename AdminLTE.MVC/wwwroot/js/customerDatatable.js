@@ -1,6 +1,9 @@
 ﻿var Popup, dataTable;
 $(document).ready(function () {
     //alert('(document).ready');
+
+   
+
     dataTable = $("#customerDatatable").DataTable({
         "processing": true,
         "serverSide": true,
@@ -54,30 +57,57 @@ $(document).ready(function () {
 });
 
 function PopupForm(url) {
-    var formDiv = $('<div/>');
+    var formDiv = $('#exampleModalCenter');
     //alert(url);
     //return;
     $.get(url)
         .done(function (response) {
+            //console.log(response);
+            //return;
             formDiv.html(response);
 
-            Popup = formDiv.dialog({
-                autoOpen: true,
-                resizable: false,
-                title: 'Fill Employee Details',
-                height: 500,
-                width: 700,
-                close: function () {
-                    Popup.dialog('destroy').remove();
-                }
+            //formDiv.modal()
+            $('#exampleModalCenter').modal()
 
-            });
+
+            //Popup = formDiv.dialog({
+            //    autoOpen: true,
+            //    resizable: false,
+            //    title: 'Fill Employee Details',
+            //    height: 500,
+            //    width: 700,
+            //    close: function () {
+            //        Popup.dialog('destroy').remove();
+            //    }
+
+            //});
         });
 }
 
 function SubmitForm(form) {
     $.validator.unobtrusive.parse(form);
     if ($(form).valid()) {
+        alert($(form).serialize());
+
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["success"]($(form).serialize())
+        return false;
         $.ajax({
             type: "POST",
             url: form.action,

@@ -10,7 +10,7 @@ using AdminLTE.MVC.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using X.PagedList;
 using System.Linq.Dynamic.Core;
-using System.Web.Mvc;
+
 
 
 namespace AdminLTE.MVC.Controllers
@@ -75,8 +75,8 @@ namespace AdminLTE.MVC.Controllers
         // GET: StagiaireStages/Create
         public IActionResult Create()
         {
-            ViewData["SpecilaiteId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Specialites, "Id", "Name");
-            ViewData["StagiaireId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Stagiaires, "Id", "Id");
+            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name");
+            ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id");
             return View();
         }
 
@@ -85,7 +85,7 @@ namespace AdminLTE.MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Microsoft.AspNetCore.Mvc.Bind("StagiaireId,StageId,SpecilaiteId,DateDebut,DateFin")] StagiaireStage stagiaireStage)
+        public async Task<IActionResult> Create([Bind("StagiaireId,StageId,SpecilaiteId,DateDebut,DateFin")] StagiaireStage stagiaireStage)
         {
             if (ModelState.IsValid)
             {
@@ -93,8 +93,8 @@ namespace AdminLTE.MVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecilaiteId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
-            ViewData["StagiaireId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
+            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
+            ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
             return View(stagiaireStage);
         }
 
@@ -111,17 +111,17 @@ namespace AdminLTE.MVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["SpecilaiteId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
-            ViewData["StagiaireId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
+            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
+            ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
             return View(stagiaireStage);
         }
 
         // POST: StagiaireStages/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Microsoft.AspNetCore.Mvc.Bind("StagiaireId,StageId,SpecilaiteId,DateDebut,DateFin")] StagiaireStage stagiaireStage)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(long id, [Bind("StagiaireId,StageId,SpecilaiteId,DateDebut,DateFin")] StagiaireStage stagiaireStage)
         {
             if (id != stagiaireStage.StagiaireId)
             {
@@ -148,8 +148,8 @@ namespace AdminLTE.MVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecilaiteId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
-            ViewData["StagiaireId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
+            ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
+            ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
             return View(stagiaireStage);
         }
 
@@ -174,8 +174,8 @@ namespace AdminLTE.MVC.Controllers
         }
 
         // POST: StagiaireStages/Delete/5
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.ActionName("Delete")]
-        [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             if (_context.StagiaireStages == null)
@@ -309,7 +309,7 @@ namespace AdminLTE.MVC.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public IActionResult AddOrEdit(string id = "")
+        public async Task<IActionResult> AddOrEditAsync(string id = "")
         {
             if (id == "")
                 return View(new StagiaireStage());
@@ -317,17 +317,26 @@ namespace AdminLTE.MVC.Controllers
             {
                 //using (DBModel db = new DBModel())
                 //{
-                
+
                 string[] Ids = id.Split('-');
 
                 //foreach (var sub in subs)
                 //{
                 //    Console.WriteLine($"Substring: {sub}");
                 //}
-                var data = _context.StagiaireStages.Where(
-                    x => x.StagiaireId == long.Parse(Ids[0]) && x.StageId == long.Parse(Ids[1]) && x.SpecialiteId == long.Parse(Ids[2]))
-                    .FirstOrDefault<StagiaireStage>();
-                return View(data);
+
+                var stagiaireStage = await _context.StagiaireStages
+               .Include(s => s.Specialite)
+               .Include(s => s.Stagiaire)
+               .FirstOrDefaultAsync(x => x.StagiaireId == long.Parse(Ids[0]) && x.StageId == long.Parse(Ids[1]) && x.SpecialiteId == long.Parse(Ids[2]));
+
+                //var stagiaireStage = _context.StagiaireStages.Where(
+                //    x => x.StagiaireId == long.Parse(Ids[0]) && x.StageId == long.Parse(Ids[1]) && x.SpecialiteId == long.Parse(Ids[2]))
+                //    .FirstOrDefault<StagiaireStage>();
+
+                ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
+                ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
+                return View(stagiaireStage);
             }
         }
     }
