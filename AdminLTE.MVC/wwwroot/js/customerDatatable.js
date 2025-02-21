@@ -1,6 +1,7 @@
-﻿$(document).ready(function () {
+﻿var Popup, dataTable;
+$(document).ready(function () {
     //alert('(document).ready');
-    $("#customerDatatable").DataTable({
+    dataTable = $("#customerDatatable").DataTable({
         "processing": true,
         "serverSide": true,
         "filter": true,
@@ -21,19 +22,103 @@
             { "data": "nom", "name": "Nom", "autoWidth": true },
             { "data": "specialite", "name": "Spécialite", "autoWidth": true },
             { "data": "dateDebut", "name": "Début", "autoWidth": true },
-            { "data": "dateFin", "name": "Fin", "autoWidth": true },   
+            { "data": "dateFin", "name": "Fin", "autoWidth": true },
             {
-                "render": function (data, row) {
-                    var links = "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + data + "'); >View</a> | ";
-                    links += "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + data + "'); >Edit</a> | ";
-                    links += "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + row + "'); >Delete</a>";
+                "data": "id", "render": function (data) {
+                    url = "/StagiaireStages/AddOrEdit/" + data;
+                    links = "<a class='btn btn-default btn-sm' onclick=PopupForm('" + url + "')><i class='fa fa-pencil'></i> Edit</a>";
+                    links += "<a class='btn btn-danger btn-sm' style='margin-left:5px' onclick=Delete(" + data + ") > <i class='fa fa-trash'></i> Delete</a > ";
                     return links;
+                },
+                "orderable": false,
+                "searchable": false,
+                "width": "150px"
+            }
+            //{
+            // < a onclick = "location.href='@Url.Action("Update", "Book", new { id = @Model.Id })'"
+            //class= "btn btn-primary" > Edit</a >
+            //    "render": function (data, row) {
+            //        var links = "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + data + "'); >View</a> | ";
+            //        links += "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + data + "'); >Edit</a> | ";
+            //        links += "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + row + "'); >Delete</a>";
+            //        return links;
 
-                }
-            },
-        ]
+            //    }
+            //},
+        ],
+        "language": {
+
+            "emptyTable": "No data found, Please click on <b>Add New</b> Button"
+        }
     });
 });
+
+function PopupForm(url) {
+    var formDiv = $('<div/>');
+    //alert(url);
+    //return;
+    $.get(url)
+        .done(function (response) {
+            formDiv.html(response);
+
+            Popup = formDiv.dialog({
+                autoOpen: true,
+                resizable: false,
+                title: 'Fill Employee Details',
+                height: 500,
+                width: 700,
+                close: function () {
+                    Popup.dialog('destroy').remove();
+                }
+
+            });
+        });
+}
+
+function SubmitForm(form) {
+    $.validator.unobtrusive.parse(form);
+    if ($(form).valid()) {
+        $.ajax({
+            type: "POST",
+            url: form.action,
+            data: $(form).serialize(),
+            success: function (data) {
+                if (data.success) {
+                    Popup.dialog('close');
+                    dataTable.ajax.reload();
+
+                    $.notify(data.message, {
+                        globalPosition: "top center",
+                        className: "success"
+                    })
+
+                }
+            }
+        });
+    }
+    return false;
+}
+
+function Delete(id) {
+    if (confirm('Are You Sure to Delete this Employee Record ?')) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Delete","Employee")/' + id,
+            success: function (data) {
+                if (data.success) {
+                    dataTable.ajax.reload();
+
+                    $.notify(data.message, {
+                        globalPosition: "top center",
+                        className: "success"
+                    })
+
+                }
+            }
+
+        });
+    }
+}
 
 //function to write actual data of a table row
 function DeleteCustomer(e) {

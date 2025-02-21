@@ -1,0 +1,43 @@
+﻿@model AdminLTE.MVC.Models.StagiaireStage
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("AddOrEdit", "Employee", FormMethod.Post, new {onsubmit = "return SubmitForm(this)" }))
+{
+    @Html.HiddenFor(model => string.Concat(model.StagiaireId, "-", model.StageId, "-", model.SpecialiteId))
+    <div class="form-group">
+        @Html.LabelFor(model => model.StageId, new { @class = "control-label" })
+        @Html.EditorFor(model => model.StageId, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.StageId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.SpecialiteId, new { @class = "control-label" })
+        @Html.EditorFor(model => model.SpecialiteId, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.SpecialiteId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.StagiaireId, new { @class = "control-label" })
+        @Html.EditorFor(model => model.StagiaireId, new { htmlAttributes = new { @class = "form-control" } })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateDebut, new { @class = "control-label" })
+        @Html.EditorFor(model => model.DateDebut, new { htmlAttributes = new { @class = "form-control" } })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateFin, new { @class = "control-label" })
+        @Html.EditorFor(model => model.DateFin, new { htmlAttributes = new { @class = "form-control" } })
+    </div>
+    @* <div class="form-group">
+        @Html.LabelFor(model => model.DateFin, new { @class = "control-label" })
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            @Html.EditorFor(model => model.DateFin, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div> *@
+    
+    <div class="form-group">
+        <input type="submit" value="Submit" class="btn btn-primary"  />
+        <input type="reset" value="Reset" class="btn" />
+    </div>
+}
