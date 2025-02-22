@@ -25,6 +25,9 @@ namespace AdminLTE.MVC.Models
 
         public virtual Specialite Specialite { get; set; }
         public virtual Stagiaire Stagiaire { get; set; }
-        
+
+        public virtual Stage Stage { get; set; }
+       
+
     }
 }

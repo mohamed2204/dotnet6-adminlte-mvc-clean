@@ -308,7 +308,7 @@ namespace AdminLTE.MVC.Controllers
             return Ok(jsonData);
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [HttpGet]
         public async Task<IActionResult> AddOrEditAsync(string id = "")
         {
             if (id == "")
@@ -328,6 +328,7 @@ namespace AdminLTE.MVC.Controllers
                 var stagiaireStage = await _context.StagiaireStages
                .Include(s => s.Specialite)
                .Include(s => s.Stagiaire)
+               .Include(s => s.Stage)
                .FirstOrDefaultAsync(x => x.StagiaireId == long.Parse(Ids[0]) && x.StageId == long.Parse(Ids[1]) && x.SpecialiteId == long.Parse(Ids[2]));
 
                 //var stagiaireStage = _context.StagiaireStages.Where(
@@ -336,44 +337,64 @@ namespace AdminLTE.MVC.Controllers
 
                 ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
                 ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
+                ViewData["Id"] = id;
                 return View(stagiaireStage);
             }
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrEditAsync(StagiaireStage ss)
+        {
+            //using (DBModel db = new DBModel())
+            //{
+            //    if (ss. == 0)
+            //    {
+            //        db.Employees.Add(emp);
+            //        db.SaveChanges();
+            //        return Json(new { success = true, message = "Saved Successfully" }, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+            //    }
+            //    else
+            //    {
+            //        db.Entry(StagiaireStage).State = EntityState.Modified;
+            //        db.SaveChanges();
+            //        return Json(new { success = true, message = "Updated Successfully" });
+            //    }
+            //}
+
+            var d = ss;
+
+            if (ss.StageId == 9999999)
+            {
+                await _context.StagiaireStages.AddAsync(ss);
+                _context.SaveChanges();
+                return Json(new { success = true, message = "Saved Successfully" });
+            }
+            else
+            {
+                _context.StagiaireStages.Update(ss);
+                _context.SaveChanges();
+                return Json(new { success = true, message = "Updated Successfully" });
+            }
+        }
+        
+
+           
+        }
+
+
+        //[Microsoft.AspNetCore.Mvc.HttpPost]
+        //public IActionResult Delete(int id)
+        //{
+        //    using (DBModel db = new DBModel())
+        //    {
+        //        Employee emp = db.Employees.Where(x => x.EmployeeID == id).FirstOrDefault<Employee>();
+        //        db.Employees.Remove(emp);
+        //        db.SaveChanges();
+        //        return Json(new { success = true, message = "Deleted Successfully" }, JsonRequestBehavior.AllowGet);
+        //    }
+        //}
     }
-
-    //[Microsoft.AspNetCore.Mvc.HttpPost]
-    //public IActionResult AddOrEdit(Employee emp)
-    //{
-    //    using (DBModel db = new DBModel())
-    //    {
-    //        if (emp.EmployeeID == 0)
-    //        {
-    //            db.Employees.Add(emp);
-    //            db.SaveChanges();
-    //            return Json(new { success = true, message = "Saved Successfully" }, JsonRequestBehavior.AllowGet);
-    //        }
-    //        else
-    //        {
-    //            db.Entry(emp).State = EntityState.Modified;
-    //            db.SaveChanges();
-    //            return Json(new { success = true, message = "Updated Successfully" }, JsonRequestBehavior.AllowGet);
-    //        }
-    //    }
-
-
-    //}
-
-    //[Microsoft.AspNetCore.Mvc.HttpPost]
-    //public IActionResult Delete(int id)
-    //{
-    //    using (DBModel db = new DBModel())
-    //    {
-    //        Employee emp = db.Employees.Where(x => x.EmployeeID == id).FirstOrDefault<Employee>();
-    //        db.Employees.Remove(emp);
-    //        db.SaveChanges();
-    //        return Json(new { success = true, message = "Deleted Successfully" }, JsonRequestBehavior.AllowGet);
-    //    }
-    //}
 }
 
 

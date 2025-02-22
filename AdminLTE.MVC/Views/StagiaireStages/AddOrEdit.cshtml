@@ -6,9 +6,9 @@
 
 <div class="modal-dialog modal-dialog-centered" role="document">
 	<div class="modal-content">
-		<form asp-action="Create" onsubmit="return SubmitForm(this)">
+		<form asp-action="AddOrEdit" onsubmit="return SubmitForm(this)">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+				<h5 class="modal-title" id="exampleModalCenterTitle">Modifier</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -17,14 +17,21 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						<input type="hidden" name="Id" value="@ViewBag.Id" />
 						<div class="form-group">
+							@Model.Stagiaire.Grade @Model.Stagiaire.Nom (@ViewBag.Id)
+						</div>
+						<div class="form-group" style="visibility:hidden">
 							<label asp-for="StagiaireId" class="control-label"></label>
 							<select asp-for="StagiaireId" class="form-control" asp-items="ViewBag.StagiaireId"></select>
+							@Model.Stagiaire.Grade @Model.Stagiaire.Nom (@ViewBag.Id)
+							@Model.Stage.Name - @ViewBag.Id
 						</div>
-						<div class="form-group">
+						<div class="form-group" style="visibility:hidden">
 							<label asp-for="StageId" class="control-label"></label>
 							<input asp-for="StageId" class="form-control" />
 							<span asp-validation-for="StageId" class="text-danger"></span>
+							@Model.Stage.Name (@Model.Stage.Promotion)
 						</div>
 						<div class="form-group">
 							<label asp-for="SpecialiteId" class="control-label"></label>
@@ -60,19 +67,18 @@
 </div>
 
 <script>
-	
+	var now = Date.now();
 	$(function() {
-	$().datepicker({
-		language: 'fr-FR'
-	});	
-	// $('#DateDebut').datepicker({
-	// 	autoHide: true,
-	// 	zIndex: 2048,
-	// });
-
 	  $('[data-toggle="datepicker"]').datepicker({
 		autoHide: true,
+		autoClose: true,
 		zIndex: 2048,
+		locale:'fr',
+		language: 'fr-FR',
+		format: 'dd-mm-yyyy',
+		startDate: new Date(2020, 1, 1),
+		endDate: new Date(2027, 1, 1) //now,
+
 	  });
 	});
 </script>

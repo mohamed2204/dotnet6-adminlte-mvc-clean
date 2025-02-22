@@ -102,6 +102,10 @@ namespace AdminLTE.MVC.Data
                     .WithMany(p => p.StagiaireStages)
                     .HasForeignKey(d => d.StagiaireId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(d => d.Stage)
+                   .WithMany(p => p.StagiaireStages)
+                   .HasForeignKey(d => d.StageId)
+                   .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             //OnModelCreatingPartial(builder);

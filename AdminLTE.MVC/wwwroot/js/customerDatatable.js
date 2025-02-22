@@ -87,40 +87,41 @@ function PopupForm(url) {
 function SubmitForm(form) {
     $.validator.unobtrusive.parse(form);
     if ($(form).valid()) {
-        alert($(form).serialize());
+        //alert($(form).serialize());
 
-        toastr.options = {
-            "closeButton": true,
-            "debug": false,
-            "newestOnTop": false,
-            "progressBar": false,
-            "positionClass": "toast-top-right",
-            "preventDuplicates": true,
-            "onclick": null,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        }
-        toastr["success"]($(form).serialize())
-        return false;
+        //toastr.options = {
+        //    "closeButton": true,
+        //    "debug": false,
+        //    "newestOnTop": false,
+        //    "progressBar": false,
+        //    "positionClass": "toast-top-right",
+        //    "preventDuplicates": true,
+        //    "onclick": null,
+        //    "showDuration": "300",
+        //    "hideDuration": "1000",
+        //    "timeOut": "5000",
+        //    "extendedTimeOut": "1000",
+        //    "showEasing": "swing",
+        //    "hideEasing": "linear",
+        //    "showMethod": "fadeIn",
+        //    "hideMethod": "fadeOut"
+        //}
+        //toastr["success"]($(form).serialize())
+        //return false;
         $.ajax({
             type: "POST",
             url: form.action,
             data: $(form).serialize(),
             success: function (data) {
                 if (data.success) {
-                    Popup.dialog('close');
+                    //Popup.dialog('close');
+                    $('#exampleModalCenter').modal('hide');
                     dataTable.ajax.reload();
-
-                    $.notify(data.message, {
-                        globalPosition: "top center",
-                        className: "success"
-                    })
+                    toastr["success"](data.message)
+                    //$.notify(data.message, {
+                    //    globalPosition: "top center",
+                    //    className: "success"
+                    //})
 
                 }
             }
