@@ -9,7 +9,7 @@ $(document).ready(function () {
         "serverSide": true,
         "filter": true,
         "ajax": {
-            "url": "/StagiaireStages/GetList2",
+            "url": "/Stagiaires/GetList",
             "type": "POST",
             "datatype": "json"
         },
@@ -28,9 +28,16 @@ $(document).ready(function () {
             { "data": "dateFin", "name": "Fin", "autoWidth": true },
             {
                 "data": "id", "render": function (data) {
-                    url = "/StagiaireStages/AddOrEdit/" + data;
-                    links = "<a class='btn btn-default btn-sm' onclick=PopupForm('" + url + "')><i class='fa fa-pencil'></i> Edit</a>";
-                    links += "<a class='btn btn-danger btn-sm' style='margin-left:5px' onclick=Delete(" + data + ") > <i class='fa fa-trash'></i> Delete</a > ";
+                    //url = "/Stagiaires/AddOrEdit/" + data;
+                    //links = "<a class='btn btn-default btn-sm' onclick=PopupForm('" + url + "')><i class='fa fa-pencil'></i> Edit</a>";
+                    //links += "<a class='btn btn-danger btn-sm' style='margin-left:5px' onclick=Delete(" + data + ") > <i class='fa fa-trash'></i> Delete</a > ";
+                 
+                    //var url = "@Url.Action("Edit","Stagiaires")/' + data,
+                  
+                    links = "<a href='/Stagiaires/Details/"  + data + "' class='btn btn-primary btn-sm rounded-0'><i class='fa fa-pencil'></i>Edit</a>";
+                    links +="<a href='/Stagiaires/Details/"  + data + "' class='btn btn-success btn-sm rounded-0'><i class='fa fa-pencil'>Details</a>";
+                    links +="<a href='/Stagiaires/Delete/"  + data + "' class='btn btn-danger btn-sm rounded-0'><i class='fa fa-trash'></i>Delete</a>";
+                    
                     return links;
                 },
                 "orderable": false,

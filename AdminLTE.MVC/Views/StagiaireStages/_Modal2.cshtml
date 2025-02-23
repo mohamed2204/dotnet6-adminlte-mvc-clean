@@ -1,0 +1,63 @@
+﻿
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelAddEmployee" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabelAddEmployee">Add Employee</h4>
+                <h4 class="modal-title" style="display:none;" id="myModalLabelUpdateEmployee">Update Employee</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="Id" name="Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label for="StagiaireId">StagiaireId</label>
+                        <input type="text" class="form-control" id="StagiaireId" placeholder="StagiaireId" />
+                    </div>
+                    <div class="form-group">
+                        <label for="StageId">StageId</label>
+                        <input type="text" class="form-control" id="StageId" placeholder="StageId" />
+                    </div>
+                    <div class="form-group">
+                        <label for="SpecialiteId">SpecialiteId</label>
+                        <input type="text" class="form-control" id="SpecialiteId" placeholder="SpecialiteId" />
+                    </div>
+                    <div class="form-group">
+                        <label for="DateDebut">DateDebut</label>
+                        <input type="text" class="form-control" id="DateDebut" placeholder="DateDebut" data-toggle="datepicker" />
+                    </div>
+                    <div class="form-group">
+                        <label for="DateFin">DateFin</label>
+                        <input type="text" class="form-control" id="DateFin" placeholder="DateFin" data-toggle="datepicker" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAdd" onclick="return Add();">Save</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="return Update();">Update</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                Are you sure you want to delete the following Employee?
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="HiddenEmployeeId" name="HiddenEmployeeId" />
+                <label id="labelToUpdateName" style="display: block; text-align: center;"></label><br />
+                <label id="labelToUpdateDepartment" style="display: block; text-align: center;"></label><br />
+                <label id="labelToUpdateSalary" style="display: block; text-align: center;"></label><br />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="return Delete();">Delete</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

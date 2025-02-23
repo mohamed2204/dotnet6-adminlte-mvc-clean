@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AdminLTE.MVC.Data;
 using AdminLTE.MVC.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using X.PagedList;
 using System.Linq.Dynamic.Core;
 
@@ -17,7 +16,7 @@ namespace AdminLTE.MVC.Controllers
 {
     //[Route("api/[controller]")]
     //[ApiController]
-    public class StagiaireStagesController : Microsoft.AspNetCore.Mvc.Controller
+    public class StagiaireStagesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -31,24 +30,27 @@ namespace AdminLTE.MVC.Controllers
         {
             //var applicationDbContext = _context.StagiaireStages.Include(s => s.Specilaite).Include(s => s.Stagiaire);
             //return View(await applicationDbContext.ToListAsync());
+            var stages = _context.Stages;
+            ViewBag.stages = new SelectList(stages, "Id", "Name");
+            //ViewData["StageId"] = new SelectList(_context.Stages, "Id", "Id");
 
-            var items = await _context.StagiaireStages.Include(s => s.Specialite).Include(s => s.Stagiaire).ToListAsync();
+            //var items = await _context.StagiaireStages.Include(s => s.Specialite).Include(s => s.Stagiaire).ToListAsync();
 
-            var pageNumber = page ?? 1;
-            // if no page was specified in the querystring, default to the first page (1)
+            //var pageNumber = page ?? 1;
+            //// if no page was specified in the querystring, default to the first page (1)
 
-            int pageSize = 15;
+            //int pageSize = 15;
 
-            IPagedList<StagiaireStage> onePageOfItems = new PagedList<StagiaireStage>(items, pageNumber, pageSize);
+            //IPagedList<StagiaireStage> onePageOfItems = new PagedList<StagiaireStage>(items, pageNumber, pageSize);
 
 
-            // return a 404 if user browses to pages beyond last page. special case first page if no items exist
-            if (onePageOfItems.PageNumber != 1 && page > onePageOfItems.PageCount)
-            {
-                return NotFound();
-            }
+            //// return a 404 if user browses to pages beyond last page. special case first page if no items exist
+            //if (onePageOfItems.PageNumber != 1 && page > onePageOfItems.PageCount)
+            //{
+            //    return NotFound();
+            //}
 
-            ViewBag.OnePageOfItems = onePageOfItems;
+            //ViewBag.OnePageOfItems = onePageOfItems;
             return View();
         }
 
@@ -150,6 +152,7 @@ namespace AdminLTE.MVC.Controllers
             }
             ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name", stagiaireStage.SpecialiteId);
             ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id", stagiaireStage.StagiaireId);
+            
             return View(stagiaireStage);
         }
 
@@ -283,6 +286,8 @@ namespace AdminLTE.MVC.Controllers
                 m.Stagiaire.Mle.ToLower().Contains(searchValue.ToLower()) ||
                 m.Stagiaire.Specialite.Name.ToLower().Contains(searchValue.ToLower())));
 
+
+            customers = customers.Where(s => s.StageId == 1);
             //sorting
             //if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
             //    customers = customers.OrderBy(string.Concat(sortColumn, " ", sortColumnDirection));
@@ -308,11 +313,31 @@ namespace AdminLTE.MVC.Controllers
             return Ok(jsonData);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> AddOrEditAsync(string id = "")
+
+        [HttpPost]
+        public async Task<IActionResult> AddRecord([FromBody] StagiaireStage stagiaireStage)
         {
-            if (id == "")
-                return View(new StagiaireStage());
+            if (ModelState.IsValid)
+            {
+                //_context.Add(stagiaireStage);
+                //await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Saved Successfully" });
+            }
+            return Json(new { success = false, message = "Error occured" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddOrEdit(string id = "")
+        {
+            if (id == "") { 
+                ViewData["SpecilaiteId"] = new SelectList(_context.Specialites, "Id", "Name");
+                //ViewData["StagiaireId"] = new SelectList(_context.Stagiaires, "Id", "Id");
+                ViewData["StageId"] = new SelectList(_context.Stages, "Id", "Id");
+                StagiaireStage stagiaireStage = new StagiaireStage();
+                ViewData["Id"] = 0;
+                
+                return View("AddOrEdit2", stagiaireStage);
+            }
             else
             {
                 //using (DBModel db = new DBModel())
@@ -342,46 +367,54 @@ namespace AdminLTE.MVC.Controllers
             }
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> AddOrEditAsync(StagiaireStage ss)
+        public async Task<IActionResult> AddStagiaireStage(StagiaireStage ss)
         {
-            //using (DBModel db = new DBModel())
-            //{
-            //    if (ss. == 0)
-            //    {
-            //        db.Employees.Add(emp);
-            //        db.SaveChanges();
-            //        return Json(new { success = true, message = "Saved Successfully" }, System.Web.Mvc.JsonRequestBehavior.AllowGet);
-            //    }
-            //    else
-            //    {
-            //        db.Entry(StagiaireStage).State = EntityState.Modified;
-            //        db.SaveChanges();
-            //        return Json(new { success = true, message = "Updated Successfully" });
-            //    }
-            //}
-
-            var d = ss;
-
-            if (ss.StageId == 9999999)
+            if (ModelState.IsValid && ss.StagiaireId != 0)
             {
-                await _context.StagiaireStages.AddAsync(ss);
-                _context.SaveChanges();
-                return Json(new { success = true, message = "Saved Successfully" });
+                try
+                {
+                    _context.Add(ss);
+                    await _context.SaveChangesAsync();
+                    return Json(new { success = true, message = "Saved Successfully" });
+                }
+                catch (Exception e)
+                {
+                     return Json(new { success = false, message = e.Message });
+                    //throw;
+                }
+              
             }
             else
             {
-                _context.StagiaireStages.Update(ss);
-                _context.SaveChanges();
-                return Json(new { success = true, message = "Updated Successfully" });
+               return Json(new { success = false, message = "Error : missing stagiaire" });
             }
         }
-        
+        [HttpPost]
+        public async Task<IActionResult> AddOrEditAsync(StagiaireStage ss)
+        {
+              
+            var stagiaireStage = await _context.StagiaireStages
+             .Include(s => s.Specialite)
+             .Include(s => s.Stagiaire)
+             .Include(s => s.Stage)
+             .FirstOrDefaultAsync(x => x.StagiaireId == ss.StagiaireId && x.StageId == ss.StageId && x.SpecialiteId == ss.SpecialiteId);
 
-           
+            if (stagiaireStage == null)
+            {
+                return Json(new { success = false, message = "Error: non found" });
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.StagiaireStages.Update(ss);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Updated Successfully" });
+            }
+
+            return Json(new { success = false, message = "Error: Update" });
         }
-
+        
 
         //[Microsoft.AspNetCore.Mvc.HttpPost]
         //public IActionResult Delete(int id)
@@ -396,5 +429,3 @@ namespace AdminLTE.MVC.Controllers
         //}
     }
 }
-
-

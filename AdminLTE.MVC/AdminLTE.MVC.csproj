@@ -47,6 +47,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\StagiaireStages\_Modal2.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="data21-02-25.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
