@@ -1,43 +1,84 @@
 ﻿@model AdminLTE.MVC.Models.StagiaireStage
 @{
-    Layout = null;
+	Layout = null;
 }
+<!-- Modal -->
 
-@using (Html.BeginForm("AddOrEdit", "Employee", FormMethod.Post, new {onsubmit = "return SubmitForm(this)" }))
-{
-    @Html.HiddenFor(model => string.Concat(model.StagiaireId, "-", model.StageId, "-", model.SpecialiteId))
-    <div class="form-group">
-        @Html.LabelFor(model => model.StageId, new { @class = "control-label" })
-        @Html.EditorFor(model => model.StageId, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.StageId)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.SpecialiteId, new { @class = "control-label" })
-        @Html.EditorFor(model => model.SpecialiteId, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.SpecialiteId)
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.StagiaireId, new { @class = "control-label" })
-        @Html.EditorFor(model => model.StagiaireId, new { htmlAttributes = new { @class = "form-control" } })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.DateDebut, new { @class = "control-label" })
-        @Html.EditorFor(model => model.DateDebut, new { htmlAttributes = new { @class = "form-control" } })
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.DateFin, new { @class = "control-label" })
-        @Html.EditorFor(model => model.DateFin, new { htmlAttributes = new { @class = "form-control" } })
-    </div>
-    @* <div class="form-group">
-        @Html.LabelFor(model => model.DateFin, new { @class = "control-label" })
-        <div class="input-group">
-            <span class="input-group-addon">$</span>
-            @Html.EditorFor(model => model.DateFin, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-    </div> *@
-    
-    <div class="form-group">
-        <input type="submit" value="Submit" class="btn btn-primary"  />
-        <input type="reset" value="Reset" class="btn" />
-    </div>
-}
+<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-content">
+		<form asp-action="AddOrEdit" onsubmit="return SubmitForm(this)">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalCenterTitle">Modifier</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						<input type="hidden" name="Id" value="@ViewBag.Id" />
+						<div class="form-group">
+							@Model.Stagiaire.Grade @Model.Stagiaire.Nom (@ViewBag.Id)
+						</div>
+						<div class="form-group" style="display:none">
+							<label asp-for="StagiaireId" class="control-label"></label>
+							<select asp-for="StagiaireId" class="form-control" asp-items="ViewBag.StagiaireId"></select>
+							@Model.Stagiaire.Grade @Model.Stagiaire.Nom (@ViewBag.Id)
+							@Model.Stage.Name - @ViewBag.Id
+						</div>
+						<div class="form-group" style="display:none">
+							<label asp-for="StageId" class="control-label"></label>
+							<input asp-for="StageId" class="form-control" />
+							<span asp-validation-for="StageId" class="text-danger"></span>
+							@Model.Stage.Name (@Model.Stage.Promotion)
+						</div>
+						<div class="form-group">
+							<label asp-for="SpecialiteId" class="control-label"></label>
+							<select asp-for="SpecialiteId" class="form-control" asp-items="ViewBag.SpecilaiteId"></select>
+						</div>
+						<div class="form-group">
+							<label asp-for="DateDebut" class="control-label"></label>
+							<input asp-for="DateDebut" class="form-control" data-toggle="datepicker" />
+							<span asp-validation-for="DateDebut" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="DateFin" class="control-label"></label>
+							<input asp-for="DateFin" class="form-control" data-toggle="datepicker" />
+							<span asp-validation-for="DateFin" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" data-toggle="datepicker">
+						</div>
+
+						@* <div class="form-group">
+							<input type="submit" value="Create" class="btn btn-primary" />
+						</div> *@
+
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Save changes</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	var now = Date.now();
+	$(function() {
+	  $('[data-toggle="datepicker"]').datepicker({
+		autoHide: true,
+		autoClose: true,
+		zIndex: 2048,
+		locale:'fr',
+		language: 'fr-FR',
+		format: 'dd-mm-yyyy',
+		startDate: new Date(2020, 1, 1),
+		endDate: new Date(2027, 1, 1) //now,
+
+	  });
+	});
+</script>

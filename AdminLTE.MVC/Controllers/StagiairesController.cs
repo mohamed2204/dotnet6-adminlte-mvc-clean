@@ -19,11 +19,59 @@ namespace AdminLTE.MVC.Controllers
             _context = context;
         }
 
+        public IActionResult GetList()
+        {
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var pageSize = int.Parse(Request.Form["length"]);
+            var skip = int.Parse(Request.Form["start"]);
+
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+            var sortColumn = Request.Form[string.Concat("columns[", Request.Form["order[0][column]"], "][name]")];
+            var sortColumnDirection = Request.Form["order[0][dir]"];
+
+            IQueryable<StagiaireStage> customers = _context.StagiaireStages.Where(m => string.IsNullOrEmpty(searchValue)
+                ? true
+                : (m.Stagiaire.Nom.ToLower().Contains(searchValue.ToLower()) ||
+                m.Stagiaire.Prenom.ToLower().Contains(searchValue.ToLower()) ||
+                m.Stagiaire.Mle.ToLower().Contains(searchValue.ToLower()) ||
+                m.Stagiaire.Specialite.Name.ToLower().Contains(searchValue.ToLower())));
+
+
+            customers = customers.Where(s => s.StageId == 1);
+            //sorting
+            //if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+            //    customers = customers.OrderBy(string.Concat(sortColumn, " ", sortColumnDirection));
+
+            //paging
+            var data = customers.Skip(skip).Take(pageSize);
+
+            var data2 = data.Select(d => new
+            {
+                //id = string.Concat(d.StagiaireId, "-", d.StageId, "-", d.SpecialiteId),
+                id = d.StagiaireId,
+                grade = d.Stagiaire.Grade,
+                prenom = d.Stagiaire.Prenom,
+                nom = d.Stagiaire.Nom,
+                specialite = d.Specialite.Name,
+                dateDebut = d.DateDebut,
+                dateFin = d.DateFin
+            }).ToList();
+
+            var recordsTotal = customers.Count();
+
+            var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data = data2 };
+
+            return Ok(jsonData);
+        }
         // GET: Stagiaires
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Stagiaires.Include(s => s.Specialite);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.Stagiaires.Include(s => s.Specialite);
+            //return View(await applicationDbContext.ToListAsync());
+            var stages = _context.Stages;
+            ViewBag.stages = new SelectList(stages, "Id", "Name");
+            return View();
         }
 
         // GET: Stagiaires/Details/5

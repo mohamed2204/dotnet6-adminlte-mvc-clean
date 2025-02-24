@@ -35,6 +35,12 @@ namespace AdminLTE.MVC
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
+            services.AddControllersWithViews().AddJsonOptions(options =>
+            {
+                // A property naming policy, or null to leave property names unchanged.
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection")));

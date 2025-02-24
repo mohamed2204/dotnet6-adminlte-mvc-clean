@@ -19,5 +19,6 @@ namespace AdminLTE.MVC.Models
         public string Promotion { get; set; }
 
         public virtual ICollection<StagePhase> StagePhases { get; set; }
+        public virtual ICollection<StagiaireStage> StagiaireStages { get; set; }
     }
 }
