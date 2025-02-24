@@ -43,9 +43,9 @@ $(document).ready(function () {
 
                     //var url = "@Url.Action("Edit","Stagiaires")/' + data,
 
-                    links = "<a href='/Stagiaires/Edit/" + data + "' class='btn btn-primary btn-sm rounded-0'><i class='fa fa-pencil'></i>Edit</a>";
-                    links += "<a href='/Stagiaires/Details/" + data + "' class='btn btn-success btn-sm rounded-0'><i class='fa fa-pencil'>Details</a>";
-                    links += "<a href='/Stagiaires/Delete/" + data + "' class='btn btn-danger btn-sm rounded-0'><i class='fa fa-trash'></i>Delete</a>";
+                    links = "<a href='/Stagiaires/Edit/" + data + "' class='btn btn-primary btn-sm rounded-0' style='margin:0 5px 0 0'><i class='fa fa-eye'></i></a>";
+                    links += "<a href='/Stagiaires/Details/" + data + "' class='btn btn-success btn-sm rounded-0' style='margin:0 5px 0 0'><i class='fa fa-eye' aria-hidden='true'></i></a>";
+                    links += "<a href='/Stagiaires/Delete/" + data + "' class='btn btn-danger btn-sm rounded-0' style='margin:0 5px 0 0'><i class='fa fa-trash' aria-hidden='true'></i></a>";
 
                     return links;
                 },
