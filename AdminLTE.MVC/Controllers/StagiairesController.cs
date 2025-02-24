@@ -30,7 +30,7 @@ namespace AdminLTE.MVC.Controllers
             var sortColumn = Request.Form[string.Concat("columns[", Request.Form["order[0][column]"], "][name]")];
             var sortColumnDirection = Request.Form["order[0][dir]"];
 
-            var stageId = int.Parse(Request.Form["stage[stageId]"]);
+            var stageId = int.Parse(Request.Form["stage[stageId]"].FirstOrDefault());
 
             IQueryable<StagiaireStage> customers = _context.StagiaireStages.Where(m => string.IsNullOrEmpty(searchValue)
                 ? true
