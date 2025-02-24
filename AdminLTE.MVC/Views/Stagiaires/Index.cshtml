@@ -12,22 +12,30 @@
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 </div>
 <div class="container">
-	<div class="row">
-		<div class="col">
-			<div class="form-group">
-				<h2>Promotion</h2>
-				<select id="stage" asp-items="@ViewBag.stages"
-						name="stage"
-						class="dropdown btn bg-gradient-primary">
-				</select>
-			</div>
+	
+	<div class="panel-heading">
+
+		<div class="pull-right" style="margin:25px; padding:0px 20px 20px 10px">
+			<h2 class="panel-title float-left" style="margin:0px 50px 0 0px;">Promotion</h2>
+			<select id="stage" asp-items="@ViewBag.stages"
+					name="stage"
+					class="dropdown btn bg-gradient-primary">
+			</select>
 		</div>
-		<div class="col">
-			<a asp-action="Create" class="btn btn-primary">Ajouter stagiaire</a>
+
+		<div class="pull-right" style="margin:25px; padding:0px 20px 20px 10px">
+			<h2 class="panel-title float-left">Stagiares</h2>
+				@* <button class="btn btn-primary pull-right"
+					id="addNewItem"
+					style="margin-right: 5px">
+				Add New
+			</button> *@
+				<a asp-action="Create" class="btn btn-primary float-right" style="margin-right: 5px">Ajouter stagiaire</a>
 		</div>
+			
+			
+		
 	</div>
-
-
 
 	@* <a asp-action="AddOrEdit" class="btn btn-outline-primary">Ajouter</a> *@
 	@* <a class="btn btn-success" style="margin-bottom:10px" onclick="PopupForm('@Url.Action("AddOrEdit", "StagiaireStages")')"><i class="fa fa-plus"></i> Add New</a> *@

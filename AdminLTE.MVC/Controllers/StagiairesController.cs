@@ -30,6 +30,8 @@ namespace AdminLTE.MVC.Controllers
             var sortColumn = Request.Form[string.Concat("columns[", Request.Form["order[0][column]"], "][name]")];
             var sortColumnDirection = Request.Form["order[0][dir]"];
 
+            var stageId = int.Parse(Request.Form["stage[stageId]"]);
+
             IQueryable<StagiaireStage> customers = _context.StagiaireStages.Where(m => string.IsNullOrEmpty(searchValue)
                 ? true
                 : (m.Stagiaire.Nom.ToLower().Contains(searchValue.ToLower()) ||
@@ -38,7 +40,7 @@ namespace AdminLTE.MVC.Controllers
                 m.Stagiaire.Specialite.Name.ToLower().Contains(searchValue.ToLower())));
 
 
-            customers = customers.Where(s => s.StageId == 1);
+            customers = customers.Where(s => s.StageId == stageId);
             //sorting
             //if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
             //    customers = customers.OrderBy(string.Concat(sortColumn, " ", sortColumnDirection));
