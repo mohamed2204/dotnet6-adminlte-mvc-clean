@@ -10,6 +10,7 @@ namespace AdminLTE.MVC.Data
     {
 
         //entities
+        public virtual DbSet<Grade> Grades { get; set; }
         public virtual DbSet<Matiere> Matieres { get; set; }
         public virtual DbSet<Phase> Phases { get; set; }
         public virtual DbSet<Specialite> Specialites { get; set; }
@@ -56,13 +57,19 @@ namespace AdminLTE.MVC.Data
             {
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasColumnType("TEXT(100)");
+                    .HasColumnType("TEXT(25)");
             });
 
             builder.Entity<Stage>(entity =>
             {
                 entity.Property(e => e.Name).IsRequired();
                 entity.Property(e => e.Promotion).IsRequired();
+            });
+
+            builder.Entity<Grade>(entity =>
+            {
+                entity.Property(e => e.Name).IsRequired()
+                        .HasColumnType("TEXT(10)");
             });
 
             builder.Entity<StagePhase>(entity =>
@@ -87,6 +94,9 @@ namespace AdminLTE.MVC.Data
                 entity.HasOne(d => d.Specialite)
                     .WithMany(p => p.Stagiaires)
                     .HasForeignKey(d => d.SpecialiteId);
+                entity.HasOne(g => g.Grade)
+                   .WithMany(p => p.Stagiaires)
+                   .HasForeignKey(g =>g.GradeId);
             });
 
             builder.Entity<StagiaireStage>(entity =>

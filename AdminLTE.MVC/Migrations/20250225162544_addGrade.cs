@@ -6,11 +6,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AdminLTE.MVC.Migrations
 {
     /// <inheritdoc />
-    public partial class initial_sqllite : Migration
+    public partial class addGrade : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Grades",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT(10)", maxLength: 25, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Grades", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Matieres",
                 columns: table => new
@@ -57,7 +70,7 @@ namespace AdminLTE.MVC.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT(100)", nullable: false)
+                    Name = table.Column<string>(type: "TEXT(25)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,25 +145,32 @@ namespace AdminLTE.MVC.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Grade = table.Column<string>(type: "TEXT", nullable: true),
-                    Prenom = table.Column<string>(type: "TEXT", nullable: true),
-                    Nom = table.Column<string>(type: "TEXT", nullable: true),
-                    Mle = table.Column<string>(type: "TEXT", nullable: true),
-                    Cin = table.Column<string>(type: "TEXT", nullable: true),
+                    Prenom = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Nom = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Mle = table.Column<string>(type: "TEXT", maxLength: 12, nullable: false),
+                    Cin = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
                     NomAr = table.Column<string>(type: "TEXT", nullable: true),
                     PrenomAr = table.Column<string>(type: "TEXT", nullable: true),
-                    SpecialiteId = table.Column<long>(type: "INTEGER", nullable: true),
+                    SpecialiteId = table.Column<long>(type: "INTEGER", nullable: false),
                     Branche = table.Column<string>(type: "TEXT", nullable: true),
-                    Promotion = table.Column<string>(type: "TEXT", nullable: true)
+                    Promotion = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    GradeId = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Stagiaires", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Stagiaires_Grades_GradeId",
+                        column: x => x.GradeId,
+                        principalTable: "Grades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Stagiaires_Specialites_SpecialiteId",
                         column: x => x.SpecialiteId,
                         principalTable: "Specialites",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -290,6 +310,11 @@ namespace AdminLTE.MVC.Migrations
                         principalTable: "Specialites",
                         principalColumn: "Id");
                     table.ForeignKey(
+                        name: "FK_StagiaireStages_Stages_StageId",
+                        column: x => x.StageId,
+                        principalTable: "Stages",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_StagiaireStages_Stagiaires_StagiaireId",
                         column: x => x.StagiaireId,
                         principalTable: "Stagiaires",
@@ -318,6 +343,11 @@ namespace AdminLTE.MVC.Migrations
                 column: "SpecialileId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Stagiaires_GradeId",
+                table: "Stagiaires",
+                column: "GradeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Stagiaires_SpecialiteId",
                 table: "Stagiaires",
                 column: "SpecialiteId");
@@ -326,6 +356,11 @@ namespace AdminLTE.MVC.Migrations
                 name: "IX_StagiaireStages_SpecialiteId",
                 table: "StagiaireStages",
                 column: "SpecialiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StagiaireStages_StageId",
+                table: "StagiaireStages",
+                column: "StageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
@@ -395,6 +430,9 @@ namespace AdminLTE.MVC.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Grades");
 
             migrationBuilder.DropTable(
                 name: "Specialites");

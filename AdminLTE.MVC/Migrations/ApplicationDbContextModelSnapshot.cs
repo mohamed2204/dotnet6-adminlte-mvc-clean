@@ -91,6 +91,22 @@ namespace AdminLTE.MVC.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("AdminLTE.MVC.Models.Grade", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("TEXT(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Grades");
+                });
+
             modelBuilder.Entity("AdminLTE.MVC.Models.Matiere", b =>
                 {
                     b.Property<int>("Id")
@@ -128,7 +144,7 @@ namespace AdminLTE.MVC.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT(100)");
+                        .HasColumnType("TEXT(25)");
 
                     b.HasKey("Id");
 
@@ -196,33 +212,47 @@ namespace AdminLTE.MVC.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Cin")
+                        .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Grade")
-                        .HasColumnType("TEXT");
+                    b.Property<long?>("GradeId")
+                        .IsRequired()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Mle")
+                        .IsRequired()
+                        .HasMaxLength(12)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NomAr")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Prenom")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PrenomAr")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Promotion")
+                        .IsRequired()
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<long?>("SpecialiteId")
+                        .IsRequired()
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GradeId");
 
                     b.HasIndex("SpecialiteId");
 
@@ -251,6 +281,8 @@ namespace AdminLTE.MVC.Migrations
                     b.HasKey("StagiaireId", "StageId", "SpecialiteId");
 
                     b.HasIndex("SpecialiteId");
+
+                    b.HasIndex("StageId");
 
                     b.ToTable("StagiaireStages");
                 });
@@ -411,9 +443,19 @@ namespace AdminLTE.MVC.Migrations
 
             modelBuilder.Entity("AdminLTE.MVC.Models.Stagiaire", b =>
                 {
+                    b.HasOne("AdminLTE.MVC.Models.Grade", "Grade")
+                        .WithMany("Stagiaires")
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AdminLTE.MVC.Models.Specialite", "Specialite")
                         .WithMany("Stagiaires")
-                        .HasForeignKey("SpecialiteId");
+                        .HasForeignKey("SpecialiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grade");
 
                     b.Navigation("Specialite");
                 });
@@ -425,12 +467,19 @@ namespace AdminLTE.MVC.Migrations
                         .HasForeignKey("SpecialiteId")
                         .IsRequired();
 
+                    b.HasOne("AdminLTE.MVC.Models.Stage", "Stage")
+                        .WithMany("StagiaireStages")
+                        .HasForeignKey("StageId")
+                        .IsRequired();
+
                     b.HasOne("AdminLTE.MVC.Models.Stagiaire", "Stagiaire")
                         .WithMany("StagiaireStages")
                         .HasForeignKey("StagiaireId")
                         .IsRequired();
 
                     b.Navigation("Specialite");
+
+                    b.Navigation("Stage");
 
                     b.Navigation("Stagiaire");
                 });
@@ -486,6 +535,11 @@ namespace AdminLTE.MVC.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AdminLTE.MVC.Models.Grade", b =>
+                {
+                    b.Navigation("Stagiaires");
+                });
+
             modelBuilder.Entity("AdminLTE.MVC.Models.Phase", b =>
                 {
                     b.Navigation("StagePhases");
@@ -503,6 +557,8 @@ namespace AdminLTE.MVC.Migrations
             modelBuilder.Entity("AdminLTE.MVC.Models.Stage", b =>
                 {
                     b.Navigation("StagePhases");
+
+                    b.Navigation("StagiaireStages");
                 });
 
             modelBuilder.Entity("AdminLTE.MVC.Models.Stagiaire", b =>
